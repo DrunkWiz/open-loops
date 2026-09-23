@@ -163,15 +163,32 @@ def friendly_error(e: Exception) -> str:
     return f"⚠️ Unexpected error: {e}"
 
 
-def configured_api_key() -> str:
-    """Key from .env or Streamlit secrets, ignoring the .env.example placeholder."""
-    key = os.getenv("NEBIUS_API_KEY", "")
+def configured_api_key() -> tuple[str, str | None]:
+    """(key, problem) from .env or Streamlit secrets, ignoring the .env.example placeholder.
+
+    Also accepts the key inside a secrets section (e.g. under [general]). `problem` explains
+    why secrets exist but couldn't be used, so a misconfigured deployment isn't silent.
+    """
+    key = os.getenv("NEBIUS_API_KEY", "").strip()
+    problem = None
     if not key:
         try:
-            key = str(st.secrets.get("NEBIUS_API_KEY", ""))
-        except Exception:  # noqa: BLE001 — no secrets file
-            key = ""
-    return "" if key.startswith("your_") else key.strip()
+            secrets = st.secrets
+            key = str(secrets.get("NEBIUS_API_KEY", "") or "").strip()
+            if not key:  # look one level down, e.g. [general] NEBIUS_API_KEY = "..."
+                for value in secrets.values():
+                    if hasattr(value, "get") and value.get("NEBIUS_API_KEY"):
+                        key = str(value.get("NEBIUS_API_KEY")).strip()
+                        break
+        except Exception as e:  # noqa: BLE001
+            # Streamlit raises the same "not found" error for a missing file (normal locally) and for
+            # invalid TOML (usually the key isn't in quotes); only the second is worth a warning.
+            if "pars" in str(e).lower():
+                problem = ("Streamlit secrets couldn't be read, so the app's key isn't loaded. Use this "
+                           'format, with the key in double quotes: `NEBIUS_API_KEY = "your-key"`')
+    if key.startswith("your_"):
+        key = ""
+    return key, problem
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -327,7 +344,9 @@ def load_saved_demo() -> None:
 with st.sidebar:
     st.markdown("### 🔁 Open Loops")
     # A key from .env / secrets is never put in a widget: password boxes can be revealed in the browser.
-    server_key = configured_api_key()
+    server_key, key_problem = configured_api_key()
+    if key_problem:
+        st.warning(key_problem)
     if server_key:
         st.caption("🔑 Using this app's Nebius key.")
         own_key = st.text_input("Use your own key instead (optional)", type="password",
