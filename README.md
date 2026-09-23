@@ -79,7 +79,7 @@ python -m evals.run_evals
 
 `python -m scripts.live_check` checks the writing features against the live model: the morning brief, a follow-up draft (it must use the latest plan, not a cancelled task or an old date) and Ask across documents. Latest run: 5/5.
 
-The core logic has 26 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
+The core logic has 27 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
 
 ## 🔒 Privacy
 

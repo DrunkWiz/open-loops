@@ -326,12 +326,17 @@ def load_saved_demo() -> None:
 # --------------------------------------------------------------------------- #
 with st.sidebar:
     st.markdown("### 🔁 Open Loops")
-    ss.api_key = st.text_input(
-        "Nebius API key",
-        value=configured_api_key(),
-        type="password",
-        help="Get one at tokenfactory.nebius.com. Pre-filled from .env or Streamlit secrets.",
-    ).strip()
+    # A key from .env / secrets is never put in a widget: password boxes can be revealed in the browser.
+    server_key = configured_api_key()
+    if server_key:
+        st.caption("🔑 Using this app's Nebius key.")
+        own_key = st.text_input("Use your own key instead (optional)", type="password",
+                                help="Get one at tokenfactory.nebius.com.").strip()
+        ss.api_key = own_key or server_key
+    else:
+        ss.api_key = st.text_input("Nebius API key", type="password",
+                                   help="Get one at tokenfactory.nebius.com, or set NEBIUS_API_KEY in .env "
+                                        "or Streamlit secrets.").strip()
 
     models = FALLBACK_MODELS
     if ss.api_key:

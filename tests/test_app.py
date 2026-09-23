@@ -137,3 +137,16 @@ def test_quotes_are_html_escaped(app):
     assert not app.exception
     rendered = " ".join(m.value for m in app.markdown)
     assert "<img" not in rendered and "&lt;img" in rendered
+
+
+def test_server_key_is_never_sent_to_the_browser(monkeypatch):
+    monkeypatch.setattr(core.llm, "LLM", FakeLLM)
+    monkeypatch.setattr(core.llm, "list_chat_models", lambda key: ["nvidia/nemotron-3-super-120b-a12b"])
+    monkeypatch.setenv("NEBIUS_API_KEY", "server-secret-123")
+    monkeypatch.delenv("WORKSPACE_FILE", raising=False)
+    at = AppTest.from_file(APP, default_timeout=30)
+    at.run()
+    assert not at.exception
+    assert at.session_state["api_key"] == "server-secret-123"  # the app can use it...
+    assert all(t.value != "server-secret-123" for t in at.text_input)  # ...but no widget holds it
+    assert any("demo live" in b.label for b in at.button)
