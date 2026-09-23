@@ -1,0 +1,30 @@
+From: Grace Liu <grace@northpeak.co>
+To: Product Team
+Subject: Mobile app v3 — timeline + scope (PLEASE READ, supersedes earlier emails)
+Date: Tue, Sep 22, 2026
+
+Hi team,
+
+A lot has changed over the past week so I want one place with the current plan. Apologies for the whiplash.
+
+ORIGINAL PLAN (Sept 1 email): Ship v3 on Oct 20 with dark mode, offline sync, the new onboarding flow, and Apple Watch support.
+
+WHAT CHANGED:
+- Last Thursday I said we'd push to Nov 3. After talking to leadership yesterday, we're going BACK to Oct 20. The app store feature slot Apple offered us is Oct 22 and we won't get another one this year.
+- To make Oct 20 we're cutting scope. Apple Watch support moves to v3.1 (target December). Offline sync is ALSO cut from v3 — Hamid confirmed it can't be stable in time. It'll go in v3.1 too.
+- Dark mode and new onboarding stay in.
+
+Note: my email on Sept 15 said offline sync was "definitely in." That's no longer true. Please ignore that email.
+
+OWNERS / DATES:
+- Hamid: onboarding flow code complete by Oct 6. (Previously I said Oct 9 — it's Oct 6 now because QA needs more time.)
+- Jess: dark mode QA pass complete by Oct 13.
+- Tomás: App Store screenshots and listing copy, submitted to Apple review by Oct 15. Apple review can take up to 4 days.
+- Me: I'll brief the customer success team on the scope change by Friday so they stop promising offline sync to customers. At least two enterprise customers (Veridian and Oakhurst) were told offline sync was coming in October — I'll call them personally.
+
+Still undecided: whether we do a beta via TestFlight before launch. Jess thinks we need it; Tomás thinks there's no time. I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.
+
+Budget is unchanged at $220K for the quarter.
+
+Thanks for rolling with this,
+Grace

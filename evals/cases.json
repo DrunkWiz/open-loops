@@ -1,0 +1,49 @@
+{
+  "extraction": [
+    {"sample": "conflicting_updates_email.txt", "date": "2026-09-22", "user": "Grace", "checks": [
+      {"owner": "Hamid", "task_any": ["onboarding"], "due": "2026-10-06", "why": "uses the revised date, not the old Oct 9"},
+      {"owner": "Jess", "task_any": ["dark mode"], "due": "2026-10-13"},
+      {"owner": "Tomás", "task_any": ["screenshot", "listing", "app store"], "due": "2026-10-15"},
+      {"owner": "Grace", "task_any": ["customer success", "brief"], "due": "2026-09-25", "why": "'by Friday' resolved from a Tuesday"},
+      {"not_open": ["offline sync"], "unless_any": ["veridian", "oakhurst", "customer", "brief", "call"], "why": "offline sync was cut from v3 (telling customers about it is fine)"}
+    ]},
+    {"sample": "family_group_chat.txt", "date": "2026-09-21", "user": "Grace", "checks": [
+      {"owner": "Dad", "task_any": ["cake"], "due": "2026-10-10"},
+      {"owner": "Dad", "task_any": ["linda", "airport", "pick"], "due": "2026-10-23"},
+      {"owner": "Jake", "task_any": ["slideshow", "photo"]},
+      {"owner": "Grace", "task_any": ["taco", "quote", "call"], "due": "2026-09-22", "why": "'tomorrow' from Monday"},
+      {"owner": "Mom", "task_any": ["guest list"]}
+    ]},
+    {"sample": "founder_voice_memo.txt", "date": "2026-09-22", "user": "Alex", "checks": [
+      {"owner": "Omar", "task_any": ["security", "questionnaire"], "due": "2026-10-10"},
+      {"owner": "Wei", "task_any": ["sso", "okta", "scope"]},
+      {"owner": "Alex", "task_any": ["lisa", "revenue recognition"], "due": "2026-09-23", "why": "first-person memo = the user"},
+      {"owner": "Alex", "task_any": ["crm", "forecast"]}
+    ]},
+    {"sample": "slack_incident_thread.txt", "date": "2026-09-22", "user": "Anita", "checks": [
+      {"owner": "Mike", "task_any": ["lint"]},
+      {"owner": "Kevin", "task_any": ["alert"]},
+      {"owner": "Sofia", "task_any": ["postmortem", "revenue"]}
+    ]},
+    {"sample": "lecture_notes_messy.md", "date": "2026-09-23", "user": "Me", "checks": [
+      {"task_any": ["ps4", "problem set"], "due": "2026-10-08"},
+      {"task_any": ["topic", "group project"], "due": "2026-10-05"}
+    ]}
+  ],
+  "changes": [
+    {"user": "Grace", "aliases": ["Grace Liu"],
+     "sequence": [["mobile_v3_kickoff_email.txt", "2026-09-15"], ["conflicting_updates_email.txt", "2026-09-22"]],
+     "checks": [
+       {"relation": "update", "task_any": ["onboarding"], "new_due": "2026-10-06", "why": "deadline moved Oct 9 → Oct 6"},
+       {"relation": "cancelled", "task_any": ["offline sync"], "why": "offline sync cut"},
+       {"relation": "cancelled", "task_any": ["watch"], "why": "Apple Watch moved to v3.1"},
+       {"relation": "update", "task_any": ["screenshot", "listing", "app store"], "new_due": "2026-10-15", "why": "Tomás moved Oct 13 → Oct 15"}
+     ]}
+  ],
+  "qa": [
+    {"sample": "lecture_notes_messy.md", "date": "2026-09-23", "question": "When is the midterm?", "expect_any": ["14"], "reject_any": []},
+    {"sample": "conflicting_updates_email.txt", "date": "2026-09-22", "question": "Is offline sync in v3?", "expect_any": ["no", "cut", "not"], "reject_any": ["definitely in"]},
+    {"sample": "auto_transcript_client_call.txt", "date": "2026-09-23", "question": "Which logo did Hannah approve?", "expect_any": ["couldn't find", "not", "hasn't", "no "], "reject_any": ["approved option", "hannah approved"]},
+    {"sample": "slack_incident_thread.txt", "date": "2026-09-22", "question": "What was the root cause?", "expect_any": ["ttl", "expir"], "reject_any": []}
+  ]
+}

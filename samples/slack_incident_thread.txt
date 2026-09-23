@@ -1,0 +1,32 @@
+#eng-oncall
+
+[9:02 AM] kevin.o: anyone else seeing checkout errors?? getting 502s on /api/cart
+[9:02 AM] kevin.o: like 1 in 5 requests
+[9:04 AM] sofia.r: yep dashboards lighting up. error rate 18% and climbing
+[9:04 AM] sofia.r: @here possible SEV2
+[9:05 AM] mike.t: was there a deploy this morning
+[9:06 AM] kevin.o: payments-svc v4.12 went out at 8:47
+[9:06 AM] mike.t: that's gotta be it
+[9:07 AM] sofia.r: not so fast, redis latency also spiked at 8:50. could be either
+[9:09 AM] anita.w (eng manager): ok declaring SEV2. sofia you're incident commander. kevin roll back payments-svc to 4.11 now, don't wait
+[9:09 AM] kevin.o: on it
+[9:14 AM] kevin.o: rollback done
+[9:18 AM] sofia.r: error rate down to 6% but not zero. so it's not ONLY the deploy
+[9:19 AM] mike.t: redis cluster node 3 is at 98% memory. someone's cache keys don't have TTLs
+[9:21 AM] mike.t: found it. the new promo-banner feature is writing a key per user session with no expiry. that's from the marketing sprint last week
+[9:22 AM] anita.w: can we just flush those keys
+[9:22 AM] mike.t: yes but they'll come back. need to turn off the promo_banner feature flag too
+[9:23 AM] anita.w: do both. mike own it
+[9:31 AM] mike.t: flag off, keys flushed, node 3 at 41%
+[9:33 AM] sofia.r: error rate 0.2%, back to baseline 🎉
+[9:35 AM] anita.w: nice work all. we lost roughly 45 min of degraded checkout. finance will want a revenue estimate, sofia can you get that to me by EOD tomorrow
+[9:36 AM] sofia.r: 👍
+[9:37 AM] anita.w: postmortem thursday 2pm. sofia write the doc beforehand. and I want two follow ups: (1) redis memory alerting at 80% not 95%, (2) a lint rule or review check that blocks cache writes without TTL
+[9:38 AM] mike.t: I can take the lint rule
+[9:38 AM] anita.w: kevin take the alerting. both by end of next sprint
+[9:40 AM] kevin.o: q — do we re-ship payments-svc 4.12 or was it innocent?
+[9:41 AM] sofia.r: unclear. the 6% after rollback suggests redis was the main cause but 4.12 might have made it worse. let's not reship until we test it against a loaded redis in staging
+[9:42 AM] anita.w: agreed. 4.12 stays rolled back until kevin confirms in staging
+[9:43 AM] priya.m (marketing): hey just seeing this — does this mean the promo banner is down? we have a campaign launching friday that depends on it 😬
+[9:45 AM] anita.w: yes it's off. mike can you give priya an ETA on a fixed version by tomorrow so marketing can decide whether to move the campaign
+[9:45 AM] mike.t: will do

@@ -1,0 +1,51 @@
+From: Daniel Kim <daniel@horizonvc.com>
+To: Maya Chen <maya@lumenhealth.io>
+Subject: RE: RE: Seed extension — next steps
+Date: Mon, Sep 21, 2026
+
+Maya,
+
+Thanks for the updated deck. Partners discussed it this morning and we're supportive of leading the $1.5M seed extension at the $18M post-money cap we talked about. Two conditions before we can send a term sheet:
+
+1. We need the updated cohort retention data (months 1-6) for the clinic customers. The deck shows logo retention but we need revenue retention.
+2. We'd like a reference call with at least two paying clinics, ideally one that has been live for 6+ months.
+
+If we can get both by Friday, October 2, I can have the term sheet to you the following week. Our partner meeting is October 7, so that's the real deadline.
+
+Also — Priya from our portfolio team can intro you to two health-system CIOs. Let me know if that's useful.
+
+Best,
+Daniel
+
+---
+
+From: Maya Chen <maya@lumenhealth.io>
+To: Daniel Kim <daniel@horizonvc.com>
+Cc: Raj Patel <raj@lumenhealth.io>
+Subject: RE: Seed extension — next steps
+Date: Mon, Sep 21, 2026
+
+Daniel,
+
+Great news, thank you. Looping in Raj (our COO), who owns the data.
+
+Raj — can you pull net revenue retention by monthly cohort for the clinic segment? Please have it to me by Wednesday Sept 30 so I can review before it goes out.
+
+For reference calls, I'll ask Dr. Alvarez at Bayview Family Medicine (live 9 months) and Sunrise Pediatrics (live 7 months). I'll confirm availability by Thursday.
+
+And yes, please — the CIO intros would be very helpful. Our pipeline is weakest with health systems, so that's exactly where we need help.
+
+One question on our side: is the $18M cap pre- or post-money on the extension? Our lawyer flagged that the SAFE language from the original round was ambiguous.
+
+Maya
+
+---
+
+From: Raj Patel <raj@lumenhealth.io>
+To: Maya Chen <maya@lumenhealth.io>
+Subject: RE: Seed extension — next steps
+Date: Mon, Sep 21, 2026
+
+On it. Heads up that our billing system migration in July means June/July cohort data may need manual reconciliation. Might take an extra day — I'll flag by Friday if Sept 30 is at risk.
+
+Raj

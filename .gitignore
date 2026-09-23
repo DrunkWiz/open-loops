@@ -1,0 +1,26 @@
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Personal data
+workspace.json
+*.workspace.json
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
+
+# Submission drafts (kept local)
+submission/

@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "user": {
+    "name": "Grace",
+    "aliases": [
+      "Grace Liu"
+    ]
+  },
+  "documents": [
+    {
+      "id": "doc_520cdba4",
+      "title": "Mobile v3 kickoff plan (email)",
+      "date": "2026-09-15",
+      "text": "From: Grace Liu <grace@northpeak.co>\nTo: Product Team\nSubject: Mobile app v3 — kickoff plan and owners\nDate: Tue, Sep 15, 2026\n\nHi team,\n\nGreat kickoff today. Here's the plan we agreed on for v3 so everyone has it in writing.\n\nLAUNCH: v3 ships Tuesday, Oct 20.\n\nSCOPE (all four are in):\n1. Dark mode\n2. Offline sync — this is definitely in. Two enterprise customers (Veridian and Oakhurst) have been asking for it, and CS has told them it's coming in October.\n3. New onboarding flow\n4. Apple Watch support\n\nOWNERS / DATES:\n- Hamid: new onboarding flow code complete by Oct 9.\n- Hamid: offline sync integration code complete by Oct 12.\n- Jess: dark mode QA pass complete by Oct 13.\n- Tomás: App Store screenshots and listing copy ready by Oct 13.\n- Wen: Apple Watch companion app feature-complete by Oct 14.\n- Me: I'll send the weekly status update to leadership every Friday, starting this Friday.\n\nBudget for the quarter is $220K.\n\nShout if anything looks off.\n\nGrace\n",
+      "source": "example",
+      "added_at": "2026-09-23T19:03:46",
+      "briefing": "### TL;DR\nThe Mobile v3 release is set for Oct 20, 2026, covering dark mode, offline sync, a new onboarding flow, and Apple Watch support, with specific owner deadlines and a $220K quarterly budget.\n\n### Key Decisions\n- Launch date fixed: **Tuesday, Oct 20**.\n- All four scoped features are confirmed **in** (dark mode, offline sync, new onboarding flow, Apple Watch support).\n- Owner‑specific completion dates assigned (see Owners/Dates below).\n- Weekly leadership status updates to begin **this Friday**, sent by Grace.\n- Quarterly budget approved at **$220K**.\n\n### Context & Highlights\n- **Offline sync** is a committed deliverable for two enterprise customers (Veridian and Oakhurst), with CS already informing them of an October release.\n- **Hamid** is responsible for both the new onboarding flow (code complete Oct 9) and offline sync integration (code complete Oct 12).\n- **Jess** will finish dark‑mode QA by Oct 13.\n- **Tomás** will have App Store screenshots and listing copy ready by Oct 13.\n- **Wen** will complete the Apple Watch companion app feature set by Oct 14.\n- Grace will circulate a **weekly status email** to leadership every Friday, starting immediately.\n\n### Risks & Open Questions\n- None recorded in the document.\n\n### Recommended Next Steps\n- Track each owner’s progress against their Oct 9‑Oct 14 milestones to ensure on‑time delivery.\n- Coordinate a pre‑launch checklist (QA, build validation, store submission) targeting the Oct 20 ship date.\n- Prepare leadership briefing materials for the first weekly status update (this Friday).\n- Verify that enterprise customers (Veridian, Oakhurst) receive any needed communication ahead of the offline sync rollout.",
+      "extracted": [
+        {
+          "task": "Complete new onboarding flow code",
+          "owner": "Hamid",
+          "requester": "Grace",
+          "due_date": "2026-10-09",
+          "due_text": "by Oct 9",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Hamid: new onboarding flow code complete by Oct 9.",
+          "verified": true
+        },
+        {
+          "task": "Complete offline sync integration code",
+          "owner": "Hamid",
+          "requester": "Grace",
+          "due_date": "2026-10-12",
+          "due_text": "by Oct 12",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Hamid: offline sync integration code complete by Oct 12.",
+          "verified": true
+        },
+        {
+          "task": "Complete dark mode QA pass",
+          "owner": "Jess",
+          "requester": "Grace",
+          "due_date": "2026-10-13",
+          "due_text": "by Oct 13",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Jess: dark mode QA pass complete by Oct 13.",
+          "verified": true
+        },
+        {
+          "task": "Prepare App Store screenshots and listing copy",
+          "owner": "Tomás",
+          "requester": "Grace",
+          "due_date": "2026-10-13",
+          "due_text": "by Oct 13",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Tomás: App Store screenshots and listing copy ready by Oct 13.",
+          "verified": true
+        },
+        {
+          "task": "Complete Apple Watch companion app feature",
+          "owner": "Wen",
+          "requester": "Grace",
+          "due_date": "2026-10-14",
+          "due_text": "by Oct 14",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Wen: Apple Watch companion app feature-complete by Oct 14.",
+          "verified": true
+        },
+        {
+          "task": "Send weekly status update to leadership every Friday",
+          "owner": "Grace",
+          "requester": "leadership",
+          "due_date": null,
+          "due_text": "every Friday, starting this Friday",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Me: I'll send the weekly status update to leadership every Friday, starting this Friday.",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "doc_1a83f5a0",
+      "title": "Grandma's 80th (family chat)",
+      "date": "2026-09-21",
+      "text": "Family Group Chat 👨‍👩‍👧‍👦 — \"Grandma's 80th 🎂\"\n\nMom: ok everyone!! grandma's 80th is Saturday Oct 24. we need to lock the plan THIS WEEK\nMom: I'm thinking the restaurant option, Lucia's, their private room fits 30\nJake: lucia's is like $65 a head tho\nMom: I know but it's her 80th\nGrace: what about doing it at our place? we have the backyard and I can cater from the taco place, way cheaper\nDad: backyard in late october is risky, could be cold/rainy\nGrace: we have the tent from Sam's graduation\nMom: hmm\nJake: honestly I vote emily's place, grandma would like it more than a fancy restaurant\nDad: fine with me if we have a rain plan\nMom: ok fine!! Grace's backyard it is. tent is the rain plan. 🎉\nGrace: yay ok I'll call the taco place tomorrow to get a quote for 30 people\nMom: guest list — I'll do it. I'll send it here by Wednesday\nJake: I can do the slideshow of old photos. can everyone send me photos by the 15th?? especially old ones, mom you have the albums\nMom: I'll scan them this weekend\nDad: I'll handle the cake. Grandma likes the lemon one from Rosa's Bakery. Need to order 2 weeks ahead so I'll do it by the 10th\nGrace: someone needs to pick up Aunt Linda from the airport, she lands friday the 23rd at 6pm\nJake: I can't I work til 7\nDad: I'll get her\nGrace: also do we invite the Hendersons? grandma's neighbors\nMom: good question… let me think about it\nJake: also who's paying for what lol\nDad: let's split food 3 ways between us, Grace and Jake. I'll cover the cake\nJake: 👍\nGrace: 👍 oh and it's a SURPRISE right? nobody tell grandma\nMom: YES surprise. I'll tell her we're just doing a small family dinner\nJake: wait is Uncle Rob coming? last time he and Linda…\nMom: 😬 we'll deal with it\n",
+      "source": "example",
+      "added_at": "2026-09-23T19:04:26",
+      "briefing": "### TL;DR\nThe family has settled on celebrating Grandma’s 80th birthday on Saturday Oct 24 at Grace’s backyard, using a tent as a rain‑plan, with taco catering, a lemon cake from Rosa’s Bakery, a photo slideshow, and split food costs; the event is to be a surprise.\n\n### Key Decisions\n- Venue: Grace’s backyard (tent reserved as rain backup).  \n- Catering: Taco place quoted for ~30 people (Grace to obtain quote).  \n- Cake: Lemon cake from Rosa’s Bakery, to be ordered by Dad by Oct 10.  \n- Slideshow: Jake to create; family to send photos by Oct 15.  \n- Transportation: Dad to pick up Aunt Linda from the airport (Fri Oct 23, 6 pm).  \n- Cost sharing: Food expenses split three ways among Dad, Grace, and Jake; Dad covers cake.  \n- Surprise: Event will be presented to Grandma as a small family dinner.  \n\n### Context & Highlights\n- Date: Saturday Oct 24, 2026 (Grandma’s 80th).  \n- Estimated headcount: ~30 guests.  \n- Lucia’s private room was considered (~$65/person) but rejected for cost.  \n- Guest list to be compiled by Mom and shared by Wednesday.  \n- Tent from Sam’s graduation will serve as rain contingency.  \n- Uncle Rob’s past tension with Aunt Linda noted but not resolved.  \n- Question of inviting the Hendersons (neighbors) pending Mom’s decision.  \n\n### Risks & Open Questions\n- Weather risk for late‑October backyard party; reliance on tent as backup.  \n- Unclear whether the Hendersons will be invited (Mom to decide).  \n- Potential awkwardness between Uncle Rob and Aunt Linda; no plan stated.  \n- Confirmation needed that the surprise story (“small family dinner”) will be believable to Grandma.  \n- Final taco catering cost and menu details pending Grace’s quote.  \n- Ensuring all photo submissions reach Jake by Oct 15.  \n\n### Recommended Next Steps\n- Mom: Send guest list to the chat by Wednesday.  \n- Grace: Obtain and share taco catering quote for 30 people ASAP.  \n- Dad: Order lemon cake from Rosa’s Bakery by Oct 10; confirm pickup/delivery timing.  \n- Jake: Remind family to send photos by Oct 15; begin assembling slideshow.  \n- Dad: Coordinate airport pickup for Aunt Linda (Fri Oct 23, 6 pm).  \n- Mom: Decide on inviting the Hendersons and communicate outcome.  \n- All: Keep the surprise intact; avoid mentioning the party to Grandma.",
+      "extracted": [
+        {
+          "task": "Call the taco place to get a quote for 30 people",
+          "owner": "Grace",
+          "requester": null,
+          "due_date": "2026-09-22",
+          "due_text": "tomorrow",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll call the taco place tomorrow to get a quote for 30 people",
+          "verified": true
+        },
+        {
+          "task": "Create guest list and send it to the group",
+          "owner": "Mom",
+          "requester": null,
+          "due_date": "2026-09-23",
+          "due_text": "by Wednesday",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll do it. I'll send it here by Wednesday",
+          "verified": true
+        },
+        {
+          "task": "Do the slideshow of old photos",
+          "owner": "Jake",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I can do the slideshow of old photos.",
+          "verified": true
+        },
+        {
+          "task": "Send photos of old family albums to Jake",
+          "owner": "Mom",
+          "requester": "Jake",
+          "due_date": "2026-10-15",
+          "due_text": "by the 15th",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "can everyone send me photos by the 15th?? especially old ones, mom you have the albums",
+          "verified": true
+        },
+        {
+          "task": "Scan the photo albums",
+          "owner": "Mom",
+          "requester": null,
+          "due_date": null,
+          "due_text": "this weekend",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll scan them this weekend",
+          "verified": true
+        },
+        {
+          "task": "Order lemon cake from Rosa's Bakery for Grandma's 80th",
+          "owner": "Dad",
+          "requester": null,
+          "due_date": "2026-10-10",
+          "due_text": "by the 10th",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll handle the cake. Grandma likes the lemon one from Rosa's Bakery. Need to order 2 weeks ahead so I'll do it by the 10th",
+          "verified": true
+        },
+        {
+          "task": "Pick up Aunt Linda from the airport",
+          "owner": "Dad",
+          "requester": "Grace",
+          "due_date": "2026-10-23",
+          "due_text": "friday the 23rd",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll get her",
+          "verified": true
+        },
+        {
+          "task": "Tell Grandma they're just doing a small family dinner (to keep surprise)",
+          "owner": "Mom",
+          "requester": null,
+          "due_date": null,
+          "due_text": null,
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll tell her we're just doing a small family dinner",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "doc_10c14682",
+      "title": "Mobile v3 scope change (email)",
+      "date": "2026-09-22",
+      "text": "From: Grace Liu <grace@northpeak.co>\nTo: Product Team\nSubject: Mobile app v3 — timeline + scope (PLEASE READ, supersedes earlier emails)\nDate: Tue, Sep 22, 2026\n\nHi team,\n\nA lot has changed over the past week so I want one place with the current plan. Apologies for the whiplash.\n\nORIGINAL PLAN (Sept 1 email): Ship v3 on Oct 20 with dark mode, offline sync, the new onboarding flow, and Apple Watch support.\n\nWHAT CHANGED:\n- Last Thursday I said we'd push to Nov 3. After talking to leadership yesterday, we're going BACK to Oct 20. The app store feature slot Apple offered us is Oct 22 and we won't get another one this year.\n- To make Oct 20 we're cutting scope. Apple Watch support moves to v3.1 (target December). Offline sync is ALSO cut from v3 — Hamid confirmed it can't be stable in time. It'll go in v3.1 too.\n- Dark mode and new onboarding stay in.\n\nNote: my email on Sept 15 said offline sync was \"definitely in.\" That's no longer true. Please ignore that email.\n\nOWNERS / DATES:\n- Hamid: onboarding flow code complete by Oct 6. (Previously I said Oct 9 — it's Oct 6 now because QA needs more time.)\n- Jess: dark mode QA pass complete by Oct 13.\n- Tomás: App Store screenshots and listing copy, submitted to Apple review by Oct 15. Apple review can take up to 4 days.\n- Me: I'll brief the customer success team on the scope change by Friday so they stop promising offline sync to customers. At least two enterprise customers (Veridian and Oakhurst) were told offline sync was coming in October — I'll call them personally.\n\nStill undecided: whether we do a beta via TestFlight before launch. Jess thinks we need it; Tomás thinks there's no time. I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.\n\nBudget is unchanged at $220K for the quarter.\n\nThanks for rolling with this,\nGrace\n",
+      "source": "example",
+      "added_at": "2026-09-23T19:05:20",
+      "briefing": "### TL;DR\nThe Mobile v3 release is moving back to the original Oct 20 target, but scope is trimmed: dark mode and the new onboarding flow stay, while Apple Watch support and offline sync are deferred to v3.1. Budget remains $220K; a decision on a TestFlight beta is pending.\n\n### Key Decisions\n- Release date set to **Oct 20, 2026** (reversing the Nov 3 proposal).  \n- **Apple Watch support** moved to v3.1 (target December).  \n- **Offline sync** removed from v3; will also ship in v3.1.  \n- Dark mode and new onboarding flow remain in v3.  \n- Owner dates updated: Hamid – onboarding code complete Oct 6; Jess – dark‑mode QA pass Oct 13; Tomás – App Store submission by Oct 15.  \n- Budget unchanged at **$220K** for the quarter.  \n- Decision on a TestFlight beta deferred pending one‑paragraph cases from Jess and Tomás by Thursday.\n\n### Context & Highlights\n- Original Sept 1 plan: Oct 20 release with dark mode, offline sync, new onboarding, Apple Watch.  \n- Grace’s Sept 15 email incorrectly stated offline sync was “definitely in”; that is now retracted.  \n- Leadership pushed back to Oct 20 to secure the Apple‑offered feature slot on Oct 22 (no later slot this year).  \n- Two enterprise customers (Veridian, Oakhurst) were told offline sync would arrive in October; Grace will brief CS and call them personally.  \n- QA timing drove the earlier onboarding deadline from Oct 9 to Oct 6.  \n- Apple review may take up to 4 days after Tomás’s Oct 15 submission.\n\n### Risks & Open Questions\n- **TestFlight beta**: undecided; Jess advocates for it, Tomás cites lack of time.  \n- **Timeline risk**: QA buffers are tight; any slip could jeopardize the Oct 20 date.  \n- **Customer expectation risk**: Veridian and Oakhurst may still anticipate offline sync in October until personally contacted.  \n- **Apple review delay**: up to 4 days could push effective availability beyond Oct 20 if issues arise.  \n- **Offline sync stability**: Hamid confirmed it cannot be stable in time for v3; deferring carries risk of delayed feature delivery.\n\n### Recommended Next Steps\n- Jess and Tomás each submit a one‑paragraph case for/against a TestFlight beta by Thursday for Grace’s decision.  \n- Grace brief the customer success team by Friday and personally call Veridian and Oakhurst to reset expectations.  \n- Hamid, Jess, and Tomás track to their updated internal milestones (Oct 6, Oct 13, Oct 15) and flag any blockers immediately.  \n- Prepare App Store assets and release notes assuming Oct 20 launch; monitor Apple review status post‑submission.  \n- Keep budget tracking unchanged; re‑forecast only if scope or timeline shifts again.",
+      "extracted": [
+        {
+          "task": "Onboarding flow code complete",
+          "owner": "Hamid",
+          "requester": "Grace",
+          "due_date": "2026-10-06",
+          "due_text": "by Oct 6",
+          "priority": "High",
+          "status": "open",
+          "change_note": "was Oct 9",
+          "source_quote": "Hamid: onboarding flow code complete by Oct 6.",
+          "verified": true
+        },
+        {
+          "task": "Dark mode QA pass complete",
+          "owner": "Jess",
+          "requester": "Grace",
+          "due_date": "2026-10-13",
+          "due_text": "by Oct 13",
+          "priority": "High",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Jess: dark mode QA pass complete by Oct 13.",
+          "verified": true
+        },
+        {
+          "task": "App Store screenshots and listing copy submitted to Apple review",
+          "owner": "Tomás",
+          "requester": "Grace",
+          "due_date": "2026-10-15",
+          "due_text": "by Oct 15",
+          "priority": "High",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "Tomás: App Store screenshots and listing copy, submitted to Apple review by Oct 15.",
+          "verified": true
+        },
+        {
+          "task": "Brief customer success team on scope change",
+          "owner": "Grace",
+          "requester": null,
+          "due_date": "2026-09-25",
+          "due_text": "by Friday",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll brief the customer success team on the scope change by Friday so they stop promising offline sync to customers.",
+          "verified": true
+        },
+        {
+          "task": "Call Veridian and Oakhurst about offline sync scope change",
+          "owner": "Grace",
+          "requester": null,
+          "due_date": null,
+          "due_text": "call them personally",
+          "priority": "Low",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'll call them personally.",
+          "verified": true
+        },
+        {
+          "task": "Send one-paragraph case for TestFlight beta",
+          "owner": "Jess",
+          "requester": "Grace",
+          "due_date": "2026-09-24",
+          "due_text": "by Thursday",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.",
+          "verified": true
+        },
+        {
+          "task": "Send one-paragraph case for TestFlight beta",
+          "owner": "Tomás",
+          "requester": "Grace",
+          "due_date": "2026-09-24",
+          "due_text": "by Thursday",
+          "priority": "Medium",
+          "status": "open",
+          "change_note": null,
+          "source_quote": "I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.",
+          "verified": true
+        },
+        {
+          "task": "Apple Watch support moved to v3.1",
+          "owner": "Unassigned",
+          "requester": "Grace",
+          "due_date": null,
+          "due_text": null,
+          "priority": "Low",
+          "status": "cancelled",
+          "change_note": null,
+          "source_quote": "Apple Watch support moves to v3.1 (target December).",
+          "verified": true
+        },
+        {
+          "task": "Offline sync cut from v3, moved to v3.1",
+          "owner": "Hamid",
+          "requester": "Grace",
+          "due_date": null,
+          "due_text": null,
+          "priority": "Medium",
+          "status": "cancelled",
+          "change_note": null,
+          "source_quote": "Offline sync is ALSO cut from v3 — Hamid confirmed it can't be stable in time. It'll go in v3.1 too.",
+          "verified": true
+        }
+      ]
+    }
+  ],
+  "commitments": [
+    {
+      "id": "c_d582a47f",
+      "task": "Complete new onboarding flow code",
+      "owner": "Hamid",
+      "requester": "Grace",
+      "due_date": "2026-10-09",
+      "due_text": "by Oct 9",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Hamid: new onboarding flow code complete by Oct 9.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_534a0d82",
+      "task": "Complete offline sync integration code",
+      "owner": "Hamid",
+      "requester": "Grace",
+      "due_date": "2026-10-12",
+      "due_text": "by Oct 12",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Hamid: offline sync integration code complete by Oct 12.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_49945ed8",
+      "task": "Complete dark mode QA pass",
+      "owner": "Jess",
+      "requester": "Grace",
+      "due_date": "2026-10-13",
+      "due_text": "by Oct 13",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Jess: dark mode QA pass complete by Oct 13.",
+          "verified": true
+        },
+        {
+          "doc_id": "doc_10c14682",
+          "doc_title": "Mobile v3 scope change (email)",
+          "doc_date": "2026-09-22",
+          "quote": "Jess: dark mode QA pass complete by Oct 13.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_5d4ce9c2",
+      "task": "Prepare App Store screenshots and listing copy",
+      "owner": "Tomás",
+      "requester": "Grace",
+      "due_date": "2026-10-13",
+      "due_text": "by Oct 13",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Tomás: App Store screenshots and listing copy ready by Oct 13.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_13229744",
+      "task": "Complete Apple Watch companion app feature",
+      "owner": "Wen",
+      "requester": "Grace",
+      "due_date": "2026-10-14",
+      "due_text": "by Oct 14",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Wen: Apple Watch companion app feature-complete by Oct 14.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_1f831854",
+      "task": "Send weekly status update to leadership every Friday",
+      "owner": "Grace",
+      "requester": "leadership",
+      "due_date": null,
+      "due_text": "every Friday, starting this Friday",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_520cdba4",
+          "doc_title": "Mobile v3 kickoff plan (email)",
+          "doc_date": "2026-09-15",
+          "quote": "Me: I'll send the weekly status update to leadership every Friday, starting this Friday.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:03:46"
+    },
+    {
+      "id": "c_847c531b",
+      "task": "Call the taco place to get a quote for 30 people",
+      "owner": "Grace",
+      "requester": null,
+      "due_date": "2026-09-22",
+      "due_text": "tomorrow",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll call the taco place tomorrow to get a quote for 30 people",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_24155db9",
+      "task": "Create guest list and send it to the group",
+      "owner": "Mom",
+      "requester": null,
+      "due_date": "2026-09-23",
+      "due_text": "by Wednesday",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll do it. I'll send it here by Wednesday",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_15c1bfe8",
+      "task": "Do the slideshow of old photos",
+      "owner": "Jake",
+      "requester": null,
+      "due_date": null,
+      "due_text": null,
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I can do the slideshow of old photos.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_b36c9617",
+      "task": "Send photos of old family albums to Jake",
+      "owner": "Mom",
+      "requester": "Jake",
+      "due_date": "2026-10-15",
+      "due_text": "by the 15th",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "can everyone send me photos by the 15th?? especially old ones, mom you have the albums",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_96395e40",
+      "task": "Scan the photo albums",
+      "owner": "Mom",
+      "requester": null,
+      "due_date": null,
+      "due_text": "this weekend",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll scan them this weekend",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_49c551ba",
+      "task": "Order lemon cake from Rosa's Bakery for Grandma's 80th",
+      "owner": "Dad",
+      "requester": null,
+      "due_date": "2026-10-10",
+      "due_text": "by the 10th",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll handle the cake. Grandma likes the lemon one from Rosa's Bakery. Need to order 2 weeks ahead so I'll do it by the 10th",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_d17995f5",
+      "task": "Pick up Aunt Linda from the airport",
+      "owner": "Dad",
+      "requester": "Grace",
+      "due_date": "2026-10-23",
+      "due_text": "friday the 23rd",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll get her",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_1c2ba825",
+      "task": "Tell Grandma they're just doing a small family dinner (to keep surprise)",
+      "owner": "Mom",
+      "requester": null,
+      "due_date": null,
+      "due_text": null,
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_1a83f5a0",
+          "doc_title": "Grandma's 80th (family chat)",
+          "doc_date": "2026-09-21",
+          "quote": "I'll tell her we're just doing a small family dinner",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:04:26"
+    },
+    {
+      "id": "c_7b263944",
+      "task": "Brief customer success team on scope change",
+      "owner": "Grace",
+      "requester": null,
+      "due_date": "2026-09-25",
+      "due_text": "by Friday",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_10c14682",
+          "doc_title": "Mobile v3 scope change (email)",
+          "doc_date": "2026-09-22",
+          "quote": "I'll brief the customer success team on the scope change by Friday so they stop promising offline sync to customers.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "c_8731ea95",
+      "task": "Call Veridian and Oakhurst about offline sync scope change",
+      "owner": "Grace",
+      "requester": null,
+      "due_date": null,
+      "due_text": "call them personally",
+      "priority": "Low",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_10c14682",
+          "doc_title": "Mobile v3 scope change (email)",
+          "doc_date": "2026-09-22",
+          "quote": "I'll call them personally.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "c_a65186e6",
+      "task": "Send one-paragraph case for TestFlight beta",
+      "owner": "Jess",
+      "requester": "Grace",
+      "due_date": "2026-09-24",
+      "due_text": "by Thursday",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_10c14682",
+          "doc_title": "Mobile v3 scope change (email)",
+          "doc_date": "2026-09-22",
+          "quote": "I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "c_9c1e50b1",
+      "task": "Send one-paragraph case for TestFlight beta",
+      "owner": "Tomás",
+      "requester": "Grace",
+      "due_date": "2026-09-24",
+      "due_text": "by Thursday",
+      "priority": "Medium",
+      "status": "open",
+      "change_note": null,
+      "sources": [
+        {
+          "doc_id": "doc_10c14682",
+          "doc_title": "Mobile v3 scope change (email)",
+          "doc_date": "2026-09-22",
+          "quote": "I'd like both of you to send me a one-paragraph case by Thursday and I'll decide.",
+          "verified": true
+        }
+      ],
+      "history": [],
+      "created_at": "2026-09-23T19:05:20"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "p_6b6a52d1",
+      "state": "pending",
+      "relation": "update",
+      "commitment_id": "c_d582a47f",
+      "doc_id": "doc_10c14682",
+      "item": {
+        "task": "Onboarding flow code complete",
+        "owner": "Hamid",
+        "requester": "Grace",
+        "due_date": "2026-10-06",
+        "due_text": "by Oct 6",
+        "priority": "High",
+        "status": "open",
+        "change_note": "was Oct 9",
+        "source_quote": "Hamid: onboarding flow code complete by Oct 6.",
+        "verified": true
+      },
+      "changes": {
+        "due_date": [
+          "2026-10-09",
+          "2026-10-06"
+        ]
+      },
+      "reason": "Deadline moved from Oct 9 to Oct 6 because QA needs more time.",
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "p_d61b4018",
+      "state": "pending",
+      "relation": "update",
+      "commitment_id": "c_5d4ce9c2",
+      "doc_id": "doc_10c14682",
+      "item": {
+        "task": "App Store screenshots and listing copy submitted to Apple review",
+        "owner": "Tomás",
+        "requester": "Grace",
+        "due_date": "2026-10-15",
+        "due_text": "by Oct 15",
+        "priority": "High",
+        "status": "open",
+        "change_note": null,
+        "source_quote": "Tomás: App Store screenshots and listing copy, submitted to Apple review by Oct 15.",
+        "verified": true
+      },
+      "changes": {
+        "due_date": [
+          "2026-10-13",
+          "2026-10-15"
+        ]
+      },
+      "reason": "Deadline moved from Oct 13 to Oct 15 to accommodate Apple review time.",
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "p_9e33249b",
+      "state": "pending",
+      "relation": "cancelled",
+      "commitment_id": "c_13229744",
+      "doc_id": "doc_10c14682",
+      "item": {
+        "task": "Apple Watch support moved to v3.1",
+        "owner": "Unassigned",
+        "requester": "Grace",
+        "due_date": null,
+        "due_text": null,
+        "priority": "Low",
+        "status": "cancelled",
+        "change_note": null,
+        "source_quote": "Apple Watch support moves to v3.1 (target December).",
+        "verified": true
+      },
+      "changes": {
+        "status": [
+          "open",
+          "cancelled"
+        ]
+      },
+      "reason": "Apple Watch support moved to v3.1, indicating cancellation of the current commitment.",
+      "created_at": "2026-09-23T19:05:20"
+    },
+    {
+      "id": "p_cb45267e",
+      "state": "pending",
+      "relation": "cancelled",
+      "commitment_id": "c_534a0d82",
+      "doc_id": "doc_10c14682",
+      "item": {
+        "task": "Offline sync cut from v3, moved to v3.1",
+        "owner": "Hamid",
+        "requester": "Grace",
+        "due_date": null,
+        "due_text": null,
+        "priority": "Medium",
+        "status": "cancelled",
+        "change_note": null,
+        "source_quote": "Offline sync is ALSO cut from v3 — Hamid confirmed it can't be stable in time. It'll go in v3.1 too.",
+        "verified": true
+      },
+      "changes": {
+        "status": [
+          "open",
+          "cancelled"
+        ]
+      },
+      "reason": "Offline sync cut from v3 and moved to v3.1, indicating cancellation of the current commitment.",
+      "created_at": "2026-09-23T19:05:20"
+    }
+  ],
+  "demo": {
+    "generated": "2026-09-23",
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "as_of": "2026-09-23"
+  }
+}

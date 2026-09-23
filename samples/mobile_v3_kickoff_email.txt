@@ -1,0 +1,30 @@
+From: Grace Liu <grace@northpeak.co>
+To: Product Team
+Subject: Mobile app v3 — kickoff plan and owners
+Date: Tue, Sep 15, 2026
+
+Hi team,
+
+Great kickoff today. Here's the plan we agreed on for v3 so everyone has it in writing.
+
+LAUNCH: v3 ships Tuesday, Oct 20.
+
+SCOPE (all four are in):
+1. Dark mode
+2. Offline sync — this is definitely in. Two enterprise customers (Veridian and Oakhurst) have been asking for it, and CS has told them it's coming in October.
+3. New onboarding flow
+4. Apple Watch support
+
+OWNERS / DATES:
+- Hamid: new onboarding flow code complete by Oct 9.
+- Hamid: offline sync integration code complete by Oct 12.
+- Jess: dark mode QA pass complete by Oct 13.
+- Tomás: App Store screenshots and listing copy ready by Oct 13.
+- Wen: Apple Watch companion app feature-complete by Oct 14.
+- Me: I'll send the weekly status update to leadership every Friday, starting this Friday.
+
+Budget for the quarter is $220K.
+
+Shout if anything looks off.
+
+Grace
