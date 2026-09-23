@@ -29,7 +29,7 @@ Feed it the text you already have: emails, meeting notes, auto-generated transcr
 | | Feature | Why it matters |
 |---|---|---|
 | 📌 | **I owe / Owed to me / Others** | Tell it who you are once, and every item is sorted by who owes what to whom. |
-| 🔁 | **Cross-document change detection** | When a newer document moves a deadline, reassigns work or cancels something, you get a **proposal** to accept or ignore. Nothing is edited silently. |
+| 🔁 | **Cross-document change detection** | When a newer document moves a deadline, reassigns work or cancels something, you get a **proposal** with the reason, to accept or ignore, and you can undo either. Nothing is edited silently. |
 | ✅ | **Verified sources** | Every commitment keeps the exact sentence it came from. The app checks that quote against the original, word for word, and flags any that don't match. |
 | 📅 | **Real dates** | "By Friday", "next Tuesday" and "tomorrow" become real dates based on when each document was written. Anything vague stays marked as undated, never guessed. |
 | ☀️ | **Morning brief** | What's overdue, due today and due this week, and who you're waiting on, in one screen. |
@@ -75,11 +75,11 @@ Open **🔁 Changes** and the app flags the plan changes: *Hamid's deadline move
 python -m evals.run_evals
 ```
 
-**Latest run, NVIDIA Nemotron 3 Super on Nebius (reasoning on): 27/27 checks passed, and 38/38 source quotes found word for word in the original documents.** The full report is in [`evals/RESULTS.md`](evals/RESULTS.md). Model outputs vary between runs, so rerun the evals after changing prompts.
+**Latest run, NVIDIA Nemotron 3 Super on Nebius (reasoning on): 34/34 checks passed, and 46/46 source quotes found word for word in the original documents.** The checks include a second chain of documents the prompts were never tuned on: a founder's voice memo followed by an email thread that moves a deadline earlier, reassigns a task, cancels one and marks one done. The full report is in [`evals/RESULTS.md`](evals/RESULTS.md). Model outputs vary between runs, so rerun the evals after changing prompts.
 
 `python -m scripts.live_check` checks the writing features against the live model: the morning brief, a follow-up draft (it must use the latest plan, not a cancelled task or an old date) and Ask across documents. Latest run: 5/5.
 
-The core logic has 27 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
+The core logic has 33 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
 
 ## 🔒 Privacy
 
@@ -108,8 +108,16 @@ Run the tests with `pip install -r requirements-dev.txt` and then `pytest`.
 
 1. Push this repo to GitHub.
 2. At [share.streamlit.io](https://share.streamlit.io), click **Create app** and pick the repo, with `app.py` as the entry point.
-3. *(Optional)* Under **Advanced settings → Secrets**, add `NEBIUS_API_KEY = "..."` so visitors can try it without their own key. **Note:** anyone with the link will then use your Nebius credits. Leave it out to have visitors paste their own key.
+3. *(Optional)* Under **Advanced settings → Secrets**, add `NEBIUS_API_KEY = "..."` (the quotes are required) so visitors can use it without their own key. The key stays on the server and is never sent to the browser.
 4. Don't set `WORKSPACE_FILE` on a public deployment.
+
+**Protecting your credits.** When visitors use the app's own key, each one gets a limited number of AI actions per session (analyzing a document, a morning brief, a follow-up draft, a question), there is a daily cap across all visitors, and very long documents are refused. Visitors who paste their own key have no limits. Tune the limits with these optional secrets:
+
+| Secret | Default | Meaning |
+|---|---|---|
+| `MAX_AI_ACTIONS_PER_SESSION` | `15` | AI actions per visitor session on the app's key |
+| `MAX_AI_ACTIONS_PER_DAY` | `300` | AI actions per day across all visitors on the app's key |
+| `MAX_DOC_CHARS` | `40000` | Longest document accepted on the app's key |
 
 ## 🗂️ Project structure
 

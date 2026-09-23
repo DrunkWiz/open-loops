@@ -14,6 +14,9 @@ import concurrent.futures
 import html
 import json
 import os
+import queue
+import threading
+import time
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -208,21 +211,85 @@ def make_llm(temperature: float | None = None) -> LLM:
                thinking=not ss.get("fast_mode", False))
 
 
-def stream_md(llm: LLM, system: str, user_msg: str) -> str:
-    """Stream a reply into the page, with a 'thinking' note until the first words arrive."""
+def stream_md(llm: LLM, system: str, user_msg: str, on_tick=None) -> str:
+    """Stream a reply into the page, with a 'thinking' note until the first words arrive.
+
+    `on_tick` is called on every chunk (including while the model is still reasoning), so the
+    caller can update other parts of the page, e.g. background progress.
+    """
     note = st.empty()
     note.caption("🧠 Thinking it through…" if llm.thinking else "⚡ Writing…")
+
+    raw: list[str] = []
 
     def chunks():
         cleared = False
         for piece in llm.stream(system, user_msg):
+            if on_tick:
+                on_tick()
+            if not piece:
+                continue
             if not cleared:
                 note.empty()
                 cleared = True
+            raw.append(piece)
             yield md(piece)
         note.empty()
 
-    return st.write_stream(chunks())
+    st.write_stream(chunks())
+    # Return the unescaped text: callers store it and escape again (with md) when they display it.
+    return "".join(raw)
+
+
+# --------------------------------------------------------------------------- #
+# Protecting a shared key (the deployment's own key, e.g. from Streamlit secrets)
+# --------------------------------------------------------------------------- #
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, "") or default)
+    except ValueError:
+        return default
+
+
+MAX_AI_ACTIONS_PER_SESSION = env_int("MAX_AI_ACTIONS_PER_SESSION", 15)
+MAX_AI_ACTIONS_PER_DAY = env_int("MAX_AI_ACTIONS_PER_DAY", 300)
+MAX_DOC_CHARS_SHARED = env_int("MAX_DOC_CHARS", 40_000)
+
+
+@st.cache_resource
+def daily_usage() -> dict:
+    """Process-wide counter shared by every visitor, so refreshing the page can't reset it."""
+    return {"day": date.today().isoformat(), "count": 0, "lock": threading.Lock()}
+
+
+def ai_actions_left() -> int:
+    return max(0, MAX_AI_ACTIONS_PER_SESSION - ss.get("ai_used", 0))
+
+
+def allow_ai(cost: int = 1, warn: bool = True) -> bool:
+    """Spend `cost` AI actions. Always allowed with the visitor's own key; capped with the shared key."""
+    if not ss.get("using_shared_key"):
+        return True
+    if not warn:
+        st_warning = lambda message: None  # noqa: E731
+    else:
+        st_warning = st.warning
+    if cost > ai_actions_left():
+        st_warning(f"You've used this session's {MAX_AI_ACTIONS_PER_SESSION} free AI actions on the demo key. "
+                   "Paste your own Nebius key in the sidebar to keep going. The saved demo still works.")
+        return False
+    usage = daily_usage()
+    with usage["lock"]:
+        today = date.today().isoformat()
+        if usage["day"] != today:
+            usage["day"], usage["count"] = today, 0
+        if usage["count"] + cost > MAX_AI_ACTIONS_PER_DAY:
+            st_warning("The demo key has reached today's limit. Paste your own Nebius key in the sidebar, "
+                       "or explore the saved demo.")
+            return False
+        usage["count"] += cost
+    ss.ai_used = ss.get("ai_used", 0) + cost
+    return True
 
 
 # --------------------------------------------------------------------------- #
@@ -266,6 +333,15 @@ def toggle_done(cid: str, key: str) -> None:
 def resolve(pid: str, accept: bool) -> None:
     wsx.resolve_proposal(ss.ws, pid, accept)
     persist_now()
+    st.toast(("Accepted" if accept else "Ignored") + ". You can undo it under Resolved.", icon="✅")
+
+
+def undo(pid: str) -> None:
+    if wsx.undo_proposal(ss.ws, pid):
+        persist_now()
+        st.toast("Undone: the change is back up for review.", icon="↩️")
+    else:
+        st.toast("Couldn't undo: that commitment was edited afterwards.", icon="⚠️")
 
 
 def persist_now() -> None:
@@ -303,9 +379,14 @@ def import_workspace() -> None:
 
 
 def prepare_demo() -> None:
-    """Live demo with a key; otherwise fall back to the saved results."""
+    """Live demo with a key; otherwise (or when out of free actions) fall back to the saved results."""
     if not ss.get("api_key"):
         load_saved_demo()
+        return
+    if not allow_ai(3, warn=False):
+        load_saved_demo()
+        ss.flash = ("warning", "Not enough free AI actions left for a live run, so the saved demo results "
+                               "were loaded instead. Paste your own key in the sidebar to run it live.")
         return
     story = CATALOG["demo_story"]
     ss.user_name = story["user"]
@@ -348,11 +429,18 @@ with st.sidebar:
     if key_problem:
         st.warning(key_problem)
     if server_key:
-        st.caption("🔑 Using this app's Nebius key.")
         own_key = st.text_input("Use your own key instead (optional)", type="password",
-                                help="Get one at tokenfactory.nebius.com.").strip()
+                                help="Get one at tokenfactory.nebius.com. With your own key there are no "
+                                     "usage limits.").strip()
         ss.api_key = own_key or server_key
+        ss.using_shared_key = not own_key
+        if ss.using_shared_key:
+            st.caption(f"🔑 Using this app's Nebius key · **{ai_actions_left()} of "
+                       f"{MAX_AI_ACTIONS_PER_SESSION}** free AI actions left this session")
+        else:
+            st.caption("🔑 Using your own key · no limits")
     else:
+        ss.using_shared_key = False
         ss.api_key = st.text_input("Nebius API key", type="password",
                                    help="Get one at tokenfactory.nebius.com, or set NEBIUS_API_KEY in .env "
                                         "or Streamlit secrets.").strip()
@@ -498,28 +586,49 @@ def run_analysis(title: str, doc_date: date, text: str, with_briefing: bool) -> 
     """Extract + match in a background thread while the briefing streams in."""
     extract_llm, brief_llm = make_llm(0.1), make_llm()
     existing = [dict(c) for c in ws["commitments"]]
+    started = time.perf_counter()
+    steps: list[str] = [f"📄 Reading *{md(title)}* ({len(text):,} characters)"]
+    messages: queue.Queue[str] = queue.Queue()  # filled from the worker thread, shown by this one
+    status = st.status("Analyzing your document…", expanded=True)
+    status.write(steps[0])
+
+    def show_progress() -> None:
+        while True:
+            try:
+                step = messages.get_nowait()
+            except queue.Empty:
+                return
+            steps.append(step)
+            status.write(step)
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-        future = pool.submit(analyze, extract_llm, text, doc_date, user, existing)
+        future = pool.submit(analyze, extract_llm, text, doc_date, user, existing, messages.put)
         briefing, brief_usage = None, None
         if with_briefing:
             st.markdown("#### 📋 Briefing")
             try:
                 source = briefing_input(brief_llm, title, doc_date.isoformat(), text)
-                briefing = stream_md(brief_llm, BRIEFING, source)
+                briefing = stream_md(brief_llm, BRIEFING, source, on_tick=show_progress)
                 brief_usage = brief_llm.last_usage
             except Exception as e:  # noqa: BLE001
                 st.warning(f"Briefing skipped: {friendly_error(e)}")
-        with st.spinner("Extracting commitments and checking them against your ledger…"):
-            try:
-                analysis = future.result()
-            except Exception as e:  # noqa: BLE001
-                st.error(friendly_error(e))
-                return
+        while not future.done():  # extraction may still be running after the briefing finishes
+            show_progress()
+            time.sleep(0.2)
+        show_progress()
+        try:
+            analysis = future.result()
+        except Exception as e:  # noqa: BLE001
+            status.update(label="Analysis failed", state="error")
+            st.error(friendly_error(e))
+            return
+    elapsed = time.perf_counter() - started
+    status.update(label=f"Done in {elapsed:.0f}s", state="complete", expanded=False)
     doc = wsx.add_document(ws, title, doc_date, text)
     doc["briefing"] = briefing if isinstance(briefing, str) else None
     summary = apply_analysis(ws, doc, analysis)
     persist()
-    ss.last_result = {"doc_id": doc["id"], "summary": summary,
+    ss.last_result = {"doc_id": doc["id"], "summary": summary, "steps": steps, "seconds": elapsed,
                       "usage": [u.label() for u in (brief_usage, analysis.usage) if u]}
     ss.morning = None
     ss.clear_input = True
@@ -533,11 +642,11 @@ def run_demo_story() -> None:
     with st.status("Running the demo as Grace…", expanded=True) as status:
         for file in story["files"]:
             sample = catalog[file]
-            st.write(f"📄 Reading **{sample['title']}** ({fmt_date(sample['date'])})…")
+            st.write(f"📄 **{sample['title']}** ({fmt_date(sample['date'])})")
             text = (SAMPLES_DIR / file).read_text(encoding="utf-8")
             try:
                 analysis = analyze(llm, text, date.fromisoformat(sample["date"]), current_user(),
-                                   [dict(c) for c in ws["commitments"]])
+                                   [dict(c) for c in ws["commitments"]], progress=st.caption)
             except Exception as e:  # noqa: BLE001
                 status.update(label="Demo stopped", state="error")
                 st.error(friendly_error(e))
@@ -559,24 +668,43 @@ def page_add() -> None:
         run_demo_story()
         return
 
+    story_help = ("Grace's week: a project kickoff email, a family chat, then an email that changes the "
+                  "plan. Shows cross-document change detection. Replaces the current workspace.")
+    first_visit = not ws["documents"]
+    if first_visit:
+        with st.container(border=True):
+            st.markdown("### 👋 New here? See it in 10 seconds")
+            st.markdown("Follow **Grace**, a product lead, through one week: a project kickoff email, her "
+                        "family's group chat about Grandma's 80th, and an email that quietly changes the plan. "
+                        "Open Loops tracks every promise across all three and flags what changed.")
+            b1, b2, _ = st.columns([2, 2, 3], vertical_alignment="center")
+            b1.button("▶ Show me Grace's week", on_click=load_saved_demo, type="primary", width="stretch",
+                      help="Instant: results saved from a real run of NVIDIA Nemotron on Nebius. No key needed.",
+                      disabled=not DEMO_FILE.exists())
+            if ss.api_key:
+                b2.button("Run it live (≈1 min)", on_click=prepare_demo, width="stretch",
+                          help=story_help + " Analyzes all three documents with the model right now.")
+            st.caption("Or add your own document below: an email, meeting notes, a chat export, a PDF.")
+        st.space("small")
+
     with st.container(border=True):
-        st.markdown("**Try it instantly**")
+        st.markdown("**Try an example document**")
         c1, c2, c3 = st.columns([3, 1, 2], vertical_alignment="bottom")
         c1.selectbox("Example document", list(SAMPLES), key="sample_pick")
         c2.button("Load example", on_click=load_sample, width="stretch")
-        story_help = ("Grace's week: a project kickoff email, a family chat, then an email that changes the "
-                      "plan. Shows cross-document change detection. Replaces the current workspace.")
-        if ss.api_key:
-            c3.button("▶ Run the 3-document demo live", on_click=prepare_demo, type="primary", width="stretch",
-                      help=story_help + " Takes about a minute with reasoning on.")
-        else:
-            c3.button("▶ Load the 3-document demo", on_click=load_saved_demo, type="primary", width="stretch",
-                      help=story_help + " No API key needed: shows results saved from a real run.")
-        if ss.api_key and DEMO_FILE.exists():
-            st.button("or load the saved demo results instantly", on_click=load_saved_demo, type="tertiary")
-        elif not ss.api_key:
-            st.caption("No API key? Load the demo to explore saved results. Add a key in the sidebar to "
-                       "analyze your own documents.")
+        if not first_visit:
+            if ss.api_key:
+                c3.button("▶ Run the 3-document demo live", on_click=prepare_demo, type="primary",
+                          width="stretch", help=story_help + " Takes about a minute with reasoning on.")
+            else:
+                c3.button("▶ Load the 3-document demo", on_click=load_saved_demo, type="primary",
+                          width="stretch", help=story_help + " No API key needed: shows results saved from a "
+                                                             "real run.")
+            if ss.api_key and DEMO_FILE.exists():
+                st.button("or load the saved demo results instantly", on_click=load_saved_demo, type="tertiary")
+        if not ss.api_key:
+            st.caption("No API key? The demo works without one. Add a key in the sidebar to analyze your own "
+                       "documents.")
 
     st.space("medium")
     left, right = st.columns([3, 2], gap="large")
@@ -599,6 +727,13 @@ def page_add() -> None:
         if not text:
             st.warning("📝 Paste some text, upload a file, or load an example first.")
             return
+        if ss.get("using_shared_key") and len(text) > MAX_DOC_CHARS_SHARED:
+            st.warning(f"This document is {len(text):,} characters. The demo key handles up to "
+                       f"{MAX_DOC_CHARS_SHARED:,}: trim it, or paste your own Nebius key in the sidebar "
+                       "for longer documents.")
+            return
+        if not allow_ai(2 if with_briefing else 1):
+            return
         title = ss.doc_title.strip() or guess_title(text)
         run_analysis(title, ss.doc_date, text, with_briefing)
 
@@ -615,6 +750,10 @@ def page_add() -> None:
     if summary["proposals"]:
         parts.append(f"**{len(summary['proposals'])}** changes to earlier plans need your review")
     st.markdown(" · ".join(parts))
+    if result.get("steps"):
+        with st.expander(f"How it was analyzed · {result['seconds']:.0f}s"):
+            for step in result["steps"]:
+                st.markdown(step)
     for label in result["usage"]:
         st.caption(label)
     if summary["proposals"]:
@@ -641,7 +780,7 @@ def page_today() -> None:
             st.markdown(md(ss.morning["text"]))
             usage_caption(ss.morning["usage"])
     elif st.button("✨ Write my morning brief", type="primary"):
-        if need_key():
+        if need_key() or not allow_ai():
             return
         llm = make_llm()
         with st.container(border=True):
@@ -759,7 +898,7 @@ def page_loops() -> None:
         chosen = followup_items(ws, user, person.lower(), ss.as_of)
         st.caption(f"{len(chosen)} open item(s) for {person}")
         if st.button(f"Draft message to {person}", width="stretch"):
-            if need_key():
+            if need_key() or not allow_ai():
                 return
             llm = make_llm()
             listing, notes = followup_listing(ws, chosen)
@@ -810,13 +949,23 @@ def page_changes() -> None:
                       width="stretch")
             b2.button("Ignore", key=f"ign_{p['id']}", on_click=resolve, args=(p["id"], False), width="stretch")
 
-    resolved = [p for p in ws["proposals"] if p["state"] != "pending"]
+    resolved = sorted((p for p in ws["proposals"] if p["state"] != "pending"),
+                      key=lambda p: p.get("resolved_at", ""), reverse=True)
     if resolved:
-        with st.expander(f"History · {len(resolved)} resolved"):
-            for p in reversed(resolved):
-                c = wsx.get_commitment(ws, p["commitment_id"])
-                mark = "✅ Accepted" if p["state"] == "accepted" else "↩️ Ignored"
-                st.markdown(f"{mark}: {md(c['task'] if c else p['item']['task'])} · {md(p['reason'])}")
+        st.space("small")
+        st.markdown(f"#### Resolved · {len(resolved)}")
+        for p in resolved:
+            c = wsx.get_commitment(ws, p["commitment_id"])
+            mark = "✅ Accepted" if p["state"] == "accepted" else "↩️ Ignored"
+            undoable = wsx.can_undo(ws, p)
+            with st.container(border=True):
+                left, right = st.columns([5, 1], vertical_alignment="center")
+                left.markdown(f"{mark} · **{md(c['task'] if c else p['item']['task'])}**")
+                left.caption(md(p["reason"]))
+                right.button("↶ Undo", key=f"undo_{p['id']}", on_click=undo, args=(p["id"],), width="stretch",
+                             disabled=not undoable,
+                             help="Put this change back up for review." if undoable else
+                             "Can't undo: this commitment has been edited since.")
 
 
 def page_ask() -> None:
@@ -840,7 +989,7 @@ def page_ask() -> None:
             st.warning("Type a question first.")
         elif not scope:
             st.warning("Pick at least one document to search.")
-        else:
+        elif allow_ai():
             llm = make_llm()
             context = qa_context(ws, scope, user, ss.as_of)
             with st.chat_message("user"):
@@ -875,7 +1024,7 @@ def page_docs() -> None:
             if doc.get("briefing"):
                 st.markdown(md(doc["briefing"]))
             elif st.button("📋 Write a briefing", key=f"brief_{doc['id']}"):
-                if need_key():
+                if need_key() or not allow_ai():
                     return
                 llm = make_llm()
                 try:

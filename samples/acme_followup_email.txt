@@ -1,0 +1,39 @@
+From: Alex Morgan <alex@fieldnote.io>
+To: Rachel Kim <rachel.kim@acmecorp.com>
+Cc: Priyanka Shah <priyanka@fieldnote.io>, Wei Zhang <wei@fieldnote.io>, Lisa Park <lisa@fieldnote.io>
+Subject: RE: Renewal proposal — next steps
+Date: Fri, Sep 25, 2026
+
+Hi Rachel,
+
+Thanks so much, great news that procurement accepted the 10% discount on a two-year term. Looping in the team so everyone has the updated plan.
+
+Responding to your two updates:
+
+1. Security questionnaire: understood that your security review board moved up to Oct 8, so the questionnaire is now due back to you by Wednesday, Oct 7 instead of Oct 10. Omar is out on leave next week, so Priyanka will own it now. Priyanka, please get the completed questionnaire to Rachel by Oct 7.
+
+2. Okta SSO: glad to hear IT is fine with SSO landing on our Q1 roadmap and that it's no longer a blocker for signing. Wei, no need to scope Okta SSO this week anymore; we'll plan it in Q1 instead.
+
+Lisa, can you prepare the two-year order form for Acme and send it to me by Wednesday, Sep 30?
+
+Also, Rachel, I sent over the thank-you note and the case study draft yesterday, so that's done on my end. Looking forward to the logo quote whenever your comms team signs off.
+
+Best,
+Alex
+
+---
+
+From: Rachel Kim <rachel.kim@acmecorp.com>
+To: Alex Morgan <alex@fieldnote.io>
+Subject: Renewal proposal
+Date: Thu, Sep 24, 2026
+
+Hi Alex,
+
+Good news: procurement accepted your proposal of 10% off with a two-year term. I'll send the signed order form once we receive it from you.
+
+Two updates on our side. Our security review board moved up to Oct 8, so we'll need the completed security questionnaire by Oct 7 instead of Oct 10. And after talking with IT, Okta SSO isn't a blocker for signing anymore. They're comfortable with it on your Q1 roadmap.
+
+Thanks for the case study draft, I'll share it with our comms team for the logo quote.
+
+Rachel

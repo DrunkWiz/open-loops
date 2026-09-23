@@ -7,6 +7,7 @@ local file when running on your own machine.
 
 from __future__ import annotations
 
+import copy
 import json
 import uuid
 from datetime import date, datetime
@@ -122,13 +123,17 @@ def add_proposal(ws: dict, doc: dict, commitment: dict, item: dict, relation: st
 
 
 def resolve_proposal(ws: dict, proposal_id: str, accept: bool) -> None:
-    """Accept: apply the change to the ledger entry. Ignore: keep the new item separately."""
+    """Accept: apply the change to the ledger entry. Ignore: keep the new item separately.
+
+    Records what it did so `undo_proposal` can reverse it.
+    """
     proposal = next(p for p in ws["proposals"] if p["id"] == proposal_id)
     if proposal["state"] != "pending":
         return
     doc = get_doc(ws, proposal["doc_id"])
     commitment = get_commitment(ws, proposal["commitment_id"])
     item = proposal["item"]
+    undo: dict = {"before": copy.deepcopy(commitment) if commitment else None, "added_id": None}
     if accept and commitment and doc:
         for key, (old, new) in proposal["changes"].items():
             commitment[key] = new
@@ -141,8 +146,41 @@ def resolve_proposal(ws: dict, proposal_id: str, accept: bool) -> None:
         commitment["change_note"] = proposal["reason"]
         add_source(commitment, doc, item)
     elif not accept and doc and item.get("status") != "cancelled":
-        add_commitment(ws, doc, item)
+        undo["added_id"] = add_commitment(ws, doc, item)["id"]
+    undo["after"] = copy.deepcopy(commitment) if commitment else None
+    proposal["undo"] = undo
     proposal["state"] = "accepted" if accept else "ignored"
+    proposal["resolved_at"] = datetime.now().isoformat(timespec="microseconds")
+
+
+def can_undo(ws: dict, proposal: dict) -> bool:
+    """Undo is safe only if nothing has touched the affected commitments since."""
+    undo = proposal.get("undo")
+    if proposal["state"] == "pending" or not undo:
+        return False
+    if get_commitment(ws, proposal["commitment_id"]) != undo["after"]:
+        return False
+    if undo["added_id"]:
+        added = get_commitment(ws, undo["added_id"])
+        if not added or added["history"] or added["status"] != proposal["item"].get("status", "open"):
+            return False
+    return True
+
+
+def undo_proposal(ws: dict, proposal_id: str) -> bool:
+    """Put a resolved proposal back to pending, restoring the ledger as it was."""
+    proposal = next((p for p in ws["proposals"] if p["id"] == proposal_id), None)
+    if not proposal or not can_undo(ws, proposal):
+        return False
+    undo = proposal.pop("undo")
+    proposal.pop("resolved_at", None)
+    if undo["before"] is not None:
+        ws["commitments"] = [undo["before"] if c["id"] == proposal["commitment_id"] else c
+                             for c in ws["commitments"]]
+    if undo["added_id"]:
+        ws["commitments"] = [c for c in ws["commitments"] if c["id"] != undo["added_id"]]
+    proposal["state"] = "pending"
+    return True
 
 
 def set_status(ws: dict, cid: str, status: str) -> None:

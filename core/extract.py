@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from difflib import SequenceMatcher
@@ -189,11 +190,19 @@ class Extraction:
     usage: Usage | None
 
 
-def extract_commitments(llm: LLM, text: str, doc_date: date, user: User) -> Extraction:
-    """Extract commitments from a document (chunked if long), with verified source quotes."""
+def extract_commitments(llm: LLM, text: str, doc_date: date, user: User,
+                        progress: Callable[[str], None] | None = None) -> Extraction:
+    """Extract commitments from a document (chunked if long), with verified source quotes.
+
+    `progress` receives short status messages; it may be called from a worker thread.
+    """
+    report = progress or (lambda message: None)
     system = extraction_prompt(doc_date, user)
     items, seen, usage = [], set(), None
-    for chunk in chunk_text(text):
+    chunks = chunk_text(text)
+    for n, chunk in enumerate(chunks, start=1):
+        part = f" (part {n} of {len(chunks)})" if len(chunks) > 1 else ""
+        report(f"🧠 {llm.model.split('/')[-1]} is reading the document{part} and extracting commitments…")
         data, chunk_usage = llm.complete_json(system, f"<document>\n{chunk}\n</document>", COMMITMENT_SCHEMA)
         usage = chunk_usage if usage is None else usage + chunk_usage
         raw_items = data.get("items", []) if isinstance(data, dict) else data

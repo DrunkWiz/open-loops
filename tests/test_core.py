@@ -191,3 +191,31 @@ def test_cancellations_match_by_feature_keyword():
 def test_stream_hides_citation_markers():
     assert _visible_prefix("Due Oct 6 【Mobile v3") == "Due Oct 6"
     assert _visible_prefix("Due Oct 6 【Mobile v3 (email)】.") == "Due Oct 6."
+
+
+def test_undo_restores_accept_and_ignore():
+    import copy as _copy
+
+    ws, first, _ = build_story()
+    before = _copy.deepcopy(ws["commitments"])
+    update = next(p for p in wsx.pending_proposals(ws) if p["relation"] == "update")
+    wsx.resolve_proposal(ws, update["id"], accept=True)
+    assert wsx.get_commitment(ws, first["added"][0])["due_date"] == "2026-10-06"
+    assert wsx.undo_proposal(ws, update["id"])
+    assert ws["commitments"] == before and update["state"] == "pending"
+
+    # Ignoring adds the new item separately; undo removes it again.
+    wsx.resolve_proposal(ws, update["id"], accept=False)
+    assert len(ws["commitments"]) == len(before) + 1
+    assert wsx.undo_proposal(ws, update["id"])
+    assert ws["commitments"] == before
+
+
+def test_undo_blocked_after_later_edits():
+    ws, first, _ = build_story()
+    update = next(p for p in wsx.pending_proposals(ws) if p["relation"] == "update")
+    wsx.resolve_proposal(ws, update["id"], accept=True)
+    wsx.set_status(ws, first["added"][0], "done")  # the user changed it afterwards
+    assert not wsx.can_undo(ws, update)
+    assert not wsx.undo_proposal(ws, update["id"])
+    assert wsx.get_commitment(ws, first["added"][0])["status"] == "done"

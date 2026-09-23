@@ -2,7 +2,9 @@
   "demo_story": {
     "title": "Grace's week: work + family, with a plan that changes",
     "user": "Grace",
-    "aliases": ["Grace Liu"],
+    "aliases": [
+      "Grace Liu"
+    ],
     "as_of": "2026-09-23",
     "files": [
       "mobile_v3_kickoff_email.txt",
@@ -11,15 +13,94 @@
     ]
   },
   "samples": [
-    {"file": "mobile_v3_kickoff_email.txt", "title": "Mobile v3 kickoff plan (email)", "date": "2026-09-15", "user": "Grace", "aliases": ["Grace Liu"]},
-    {"file": "conflicting_updates_email.txt", "title": "Mobile v3 scope change (email)", "date": "2026-09-22", "user": "Grace", "aliases": ["Grace Liu"]},
-    {"file": "family_group_chat.txt", "title": "Grandma's 80th (family chat)", "date": "2026-09-21", "user": "Grace", "aliases": []},
-    {"file": "q4_launch_sync.md", "title": "Q4 launch sync (meeting)", "date": "2026-09-18", "user": "Priya", "aliases": []},
-    {"file": "founder_voice_memo.txt", "title": "Founder voice memo (brain dump)", "date": "2026-09-22", "user": "Alex", "aliases": []},
-    {"file": "investor_email_thread.txt", "title": "Seed extension (email thread)", "date": "2026-09-21", "user": "Maya", "aliases": ["Maya Chen"]},
-    {"file": "slack_incident_thread.txt", "title": "Checkout incident (Slack)", "date": "2026-09-22", "user": "Anita", "aliases": ["anita.w"]},
-    {"file": "auto_transcript_client_call.txt", "title": "Rebrand client call (auto-transcript)", "date": "2026-09-23", "user": "Speaker 2", "aliases": ["Brightline"]},
-    {"file": "student_group_project.md", "title": "CS group project (student notes)", "date": "2026-09-22", "user": "Aisha", "aliases": []},
-    {"file": "lecture_notes_messy.md", "title": "Econ lecture (messy notes)", "date": "2026-09-23", "user": "Me", "aliases": []}
+    {
+      "file": "mobile_v3_kickoff_email.txt",
+      "title": "Mobile v3 kickoff plan (email)",
+      "date": "2026-09-15",
+      "user": "Grace",
+      "aliases": [
+        "Grace Liu"
+      ]
+    },
+    {
+      "file": "conflicting_updates_email.txt",
+      "title": "Mobile v3 scope change (email)",
+      "date": "2026-09-22",
+      "user": "Grace",
+      "aliases": [
+        "Grace Liu"
+      ]
+    },
+    {
+      "file": "family_group_chat.txt",
+      "title": "Grandma's 80th (family chat)",
+      "date": "2026-09-21",
+      "user": "Grace",
+      "aliases": []
+    },
+    {
+      "file": "q4_launch_sync.md",
+      "title": "Q4 launch sync (meeting)",
+      "date": "2026-09-18",
+      "user": "Priya",
+      "aliases": []
+    },
+    {
+      "file": "founder_voice_memo.txt",
+      "title": "Founder voice memo (brain dump)",
+      "date": "2026-09-22",
+      "user": "Alex",
+      "aliases": []
+    },
+    {
+      "file": "acme_followup_email.txt",
+      "title": "Acme deal follow-up (email thread)",
+      "date": "2026-09-25",
+      "user": "Alex",
+      "aliases": [
+        "Alex Morgan"
+      ]
+    },
+    {
+      "file": "investor_email_thread.txt",
+      "title": "Seed extension (email thread)",
+      "date": "2026-09-21",
+      "user": "Maya",
+      "aliases": [
+        "Maya Chen"
+      ]
+    },
+    {
+      "file": "slack_incident_thread.txt",
+      "title": "Checkout incident (Slack)",
+      "date": "2026-09-22",
+      "user": "Anita",
+      "aliases": [
+        "anita.w"
+      ]
+    },
+    {
+      "file": "auto_transcript_client_call.txt",
+      "title": "Rebrand client call (auto-transcript)",
+      "date": "2026-09-23",
+      "user": "Speaker 2",
+      "aliases": [
+        "Brightline"
+      ]
+    },
+    {
+      "file": "student_group_project.md",
+      "title": "CS group project (student notes)",
+      "date": "2026-09-22",
+      "user": "Aisha",
+      "aliases": []
+    },
+    {
+      "file": "lecture_notes_messy.md",
+      "title": "Econ lecture (messy notes)",
+      "date": "2026-09-23",
+      "user": "Me",
+      "aliases": []
+    }
   ]
 }

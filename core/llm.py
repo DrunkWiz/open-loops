@@ -169,6 +169,8 @@ class LLM:
             if len(visible) > shown:
                 yield visible[shown:]
                 shown = len(visible)
+            else:
+                yield ""  # heartbeat while the model reasons, so callers can update progress
         self.last_usage = Usage(time.perf_counter() - start, tokens, self.model)
 
     def complete_json(self, system: str, user: str, schema: dict, max_tokens: int = MAX_TOKENS) -> tuple[Any, Usage]:

@@ -96,6 +96,11 @@ def run(model: str, api_key: str, thinking: bool = True) -> str:
                     and mentions(wsx.get_commitment(ws, p["commitment_id"])["task"], check["task_any"])]
             if "new_due" in check:
                 hits = [p for p in hits if p["changes"].get("due_date", [None, None])[1] == check["new_due"]]
+            if "new_owner" in check:
+                hits = [p for p in hits if owner_matches(p["changes"].get("owner", [None, ""])[1] or "",
+                                                         check["new_owner"])]
+            if "new_status" in check:
+                hits = [p for p in hits if p["changes"].get("status", [None, None])[1] == check["new_status"]]
             ok = bool(hits)
             passed, total = passed + ok, total + 1
             lines.append(f"- {'✅' if ok else '❌'} {check['relation']}: {check['task_any'][0]} — *{check['why']}*")

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from difflib import SequenceMatcher
@@ -112,10 +113,17 @@ class Analysis:
     usage: Usage | None = None
 
 
-def analyze(llm: LLM, text: str, doc_date: date, user: User, existing: list[dict]) -> Analysis:
-    """Extract commitments and match them to the ledger. Pure: doesn't touch the workspace."""
-    extraction = extract_commitments(llm, text, doc_date, user)
+def analyze(llm: LLM, text: str, doc_date: date, user: User, existing: list[dict],
+            progress: Callable[[str], None] | None = None) -> Analysis:
+    """Extract commitments and match them to the ledger. Pure: doesn't touch the workspace.
+
+    `progress` receives short status messages; it may be called from a worker thread.
+    """
+    report = progress or (lambda message: None)
+    extraction = extract_commitments(llm, text, doc_date, user, progress)
     analysis = Analysis(extraction.items, usage=extraction.usage)
+    dated = sum(1 for i in extraction.items if i["due_date"])
+    report(f"✅ Found {len(extraction.items)} commitment(s), {dated} with a date")
     active = [c for c in existing if c["status"] != "cancelled"]
 
     blocks, allowed = [], {}
@@ -129,8 +137,11 @@ def analyze(llm: LLM, text: str, doc_date: date, user: User, existing: list[dict
         source = f'\n  Context in the new document: "{context}"' if context else ""
         blocks.append(f"New item {i}: {_describe(item)}{source}\n  Candidates:\n{lines}")
     if not blocks:
+        if active:
+            report(f"🔍 Nothing here overlaps your {len(active)} tracked commitment(s)")
         return analysis
 
+    report(f"🔍 Checking {len(blocks)} of them against your {len(active)} tracked commitment(s) for changes…")
     data, usage = llm.complete_json(MATCH_PROMPT, "\n\n".join(blocks), MATCH_SCHEMA)
     analysis.usage = usage if analysis.usage is None else analysis.usage + usage
     for m in data.get("matches", []) if isinstance(data, dict) else []:
@@ -142,6 +153,8 @@ def analyze(llm: LLM, text: str, doc_date: date, user: User, existing: list[dict
         if i in allowed and m.get("existing") in allowed[i] and relation in ("same", "update", "cancelled"):
             analysis.matches[i] = {"existing": m["existing"], "relation": relation,
                                    "reason": str(m.get("reason") or "").strip()}
+    changed = sum(1 for m in analysis.matches.values() if m["relation"] != "same")
+    report(f"🔁 {changed} possible change(s) to earlier plans" if changed else "🔁 No changes to earlier plans")
     return analysis
 
 

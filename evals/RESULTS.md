@@ -1,9 +1,9 @@
 # Evaluation results
 
 - **Model:** `nvidia/nemotron-3-super-120b-a12b` on Nebius Token Factory (reasoning on)
-- **Run:** 2026-09-23, 3.0 min
-- **Score:** **27/27 checks passed (100%)**
-- **Source grounding:** 38/38 (100%) extracted items had a quote found verbatim in the document
+- **Run:** 2026-09-24, 4.0 min
+- **Score:** **34/34 checks passed (100%)**
+- **Source grounding:** 46/46 (100%) extracted items had a quote found verbatim in the document
 
 Checks are hand-written expectations for the files in `samples/` (see `evals/cases.json`).
 
@@ -17,7 +17,7 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ Grace: customer success due 2026-09-25 — *'by Friday' resolved from a Tuesday*
 - ✅ no open item about offline sync — *offline sync was cut from v3 (telling customers about it is fine)*
 
-**family_group_chat.txt** (8 items)
+**family_group_chat.txt** (9 items)
 
 - ✅ Dad: cake due 2026-10-10
 - ✅ Dad: linda due 2026-10-23
@@ -38,10 +38,16 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ Kevin: alert
 - ✅ Sofia: postmortem
 
-**lecture_notes_messy.md** (6 items)
+**lecture_notes_messy.md** (7 items)
 
 - ✅ someone: ps4 due 2026-10-08
 - ✅ someone: topic due 2026-10-05
+
+**acme_followup_email.txt** (6 items)
+
+- ✅ Priyanka: questionnaire due 2026-10-07 — *reassigned from Omar, deadline moved up*
+- ✅ Lisa: order form due 2026-09-30
+- ✅ no open item about sso — *SSO scoping no longer needed this week*
 
 ## Cross-document change detection
 
@@ -52,9 +58,16 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ cancelled: watch — *Apple Watch moved to v3.1*
 - ✅ update: screenshot — *Tomás moved Oct 13 → Oct 15*
 
+**founder_voice_memo.txt → acme_followup_email.txt** (3 proposals)
+
+- ✅ update: questionnaire — *questionnaire moved Oct 10 → Oct 7*
+- ✅ update: questionnaire — *questionnaire reassigned Omar → Priyanka*
+- ✅ cancelled: sso — *Wei's SSO scoping cancelled*
+- ✅ update: case study — *case study and thank-you note sent*
+
 ## Grounded Q&A
 
-- ✅ *When is the midterm?* → The midterm is now scheduled for **October 14** (it was moved from October 12).
-- ✅ *Is offline sync in v3?* → No—offline sync has been removed from v3 and will be part of v3.1 instead (“Offline sync is ALSO cut from v3…It’ll go in v3.1 too.” – conflicting_updates_email.
+- ✅ *When is the midterm?* → The midterm is now scheduled for **October 14** (originally set for October 12). [lecture_notes_messy.md]
+- ✅ *Is offline sync in v3?* → No—offline sync has been removed from v3 (“Offline sync is also cut from v3”) according to the latest update in *conflicting_updates_email.txt*.
 - ✅ *Which logo did Hannah approve?* → I couldn't find that in your documents.
-- ✅ *What was the root cause?* → The root cause was the new promo‑banner feature writing a cache key for every user session without setting a TTL, which filled Redis node 3’s memory and caused 
+- ✅ *What was the root cause?* → The root cause was the new promo‑banner feature creating cache keys for each user session without setting a TTL, which filled Redis memory and caused high laten
