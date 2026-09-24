@@ -66,10 +66,13 @@ st.markdown(
 .hero code {background: rgba(255,255,255,.12); color: #DDF5B8;}
 .hero .tag {display: inline-block; font-size: .75rem; padding: .15rem .6rem; border-radius: 999px;
             background: rgba(118,185,0,.25); border: 1px solid rgba(118,185,0,.6); margin-bottom: .6rem;}
-.metric {border: 1px solid rgba(128,128,128,.25); border-radius: 12px; padding: .9rem 1.1rem;}
-.metric .n {font-size: 1.6rem; font-weight: 700; line-height: 1.1;}
-.metric .l {font-size: .8rem; opacity: .7;}
-.metric.alert .n {color: #D9480F;}
+.st-key-metrics button {height: auto; min-height: 4.6rem; padding: .8rem 1.1rem; border-radius: 12px;
+    border: 1px solid rgba(128,128,128,.25); background: transparent; justify-content: flex-start;}
+.st-key-metrics button > div {justify-content: flex-start; width: 100%;}
+.st-key-metrics button p {margin: 0; text-align: left; font-size: .8rem; line-height: 1.3; opacity: .85;}
+.st-key-metrics button strong {display: block; font-size: 1.6rem; font-weight: 700; line-height: 1.15; opacity: 1;}
+.st-key-metrics button:hover {border-color: #76B900; background: rgba(118,185,0,.07); color: inherit;}
+.st-key-metrics button:focus:not(:active) {border-color: #76B900; color: inherit;}
 .quote {border-left: 3px solid #76B900; padding: .2rem .7rem; margin: .3rem 0; font-style: italic; opacity: .9;}
 </style>
 """,
@@ -106,6 +109,7 @@ ss.setdefault("doc_text", "")
 ss.setdefault("doc_title", "")
 ss.setdefault("doc_date", date.today())
 ss.setdefault("flash", None)
+ss.setdefault("f_overdue", False)
 if "nav_next" in ss:  # navigation requested by a button in the previous run
     ss.nav = ss.pop("nav_next")
 if ss.pop("clear_input", False):  # after a document is added; must run before the widgets render
@@ -127,6 +131,16 @@ def current_user() -> User:
 
 
 def go(page: str) -> None:
+    ss.nav_next = page
+
+
+def open_view(page: str, filters: dict | None = None) -> None:
+    """Jump to a page, optionally with Commitments filters (used by the stat cards)."""
+    if filters is not None:
+        ss.f_who = filters.get("who", "all")
+        ss.f_state = "open"
+        ss.f_view = "list"
+        ss.f_overdue = bool(filters.get("overdue"))
     ss.nav_next = page
 
 
@@ -499,17 +513,22 @@ st.markdown(
 
 brief = build_brief(ws, user, ss.as_of)
 counts = brief["counts"]
+# Stat cards: each opens the view it counts. (key, label, count, alert, target page, filters)
 metrics = [
-    ("Open loops", counts["open"], False),
-    ("I owe", counts["mine"], False),
-    ("Owed to me", counts["owed"], False),
-    ("Overdue", counts["overdue"], counts["overdue"] > 0),
-    ("Changes to review", counts["pending"], counts["pending"] > 0),
-    ("Documents", counts["documents"], False),
+    ("open", "Open loops", counts["open"], False, "loops", {"who": "all"}),
+    ("mine", "I owe", counts["mine"], False, "loops", {"who": "mine"}),
+    ("owed", "Owed to me", counts["owed"], False, "loops", {"who": "owed"}),
+    ("overdue", "Overdue", counts["overdue"], counts["overdue"] > 0, "loops", {"who": "all", "overdue": True}),
+    ("pending", "Changes to review", counts["pending"], counts["pending"] > 0, "changes", None),
+    ("docs", "Documents", counts["documents"], False, "docs", None),
 ]
-for col, (label, n, alert) in zip(st.columns(len(metrics), gap="medium"), metrics):
-    col.markdown(f'<div class="metric{" alert" if alert else ""}"><div class="n">{n}</div>'
-                 f'<div class="l">{label}</div></div>', unsafe_allow_html=True)
+alert_css = "".join(f".st-key-m_{key} button strong {{color: #D9480F;}}" for key, _, _, alert, _, _ in metrics if alert)
+if alert_css:
+    st.markdown(f"<style>{alert_css}</style>", unsafe_allow_html=True)
+with st.container(key="metrics"):
+    for col, (key, label, n, _, page, filters) in zip(st.columns(len(metrics), gap="medium"), metrics):
+        col.button(f"**{n}**\n{label}", key=f"m_{key}", width="stretch", on_click=open_view,
+                   args=(page, filters), help=f"Show {label.lower()}")
 
 if ss.flash:
     kind, message = ss.flash
@@ -846,6 +865,10 @@ def timeline_buckets(items: list[dict]) -> dict[str, list[dict]]:
     return buckets
 
 
+def clear_overdue_filter() -> None:
+    ss.f_overdue = False
+
+
 def page_loops() -> None:
     if not ws["commitments"]:
         st.info("No commitments yet. Add a document from **➕ Add**.")
@@ -862,6 +885,10 @@ def page_loops() -> None:
 
     items = sort_by_due([c for c in ws["commitments"]
                          if (who == "all" or direction(c, user) == who) and (state == "all" or c["status"] == state)])
+    if ss.f_overdue:
+        items = [c for c in items if c["status"] == "open" and due(c) and due(c) < ss.as_of]
+        st.button(f"🔥 Showing overdue only ({len(items)}) · ✕ show all", on_click=clear_overdue_filter,
+                  type="tertiary")
     if not items:
         st.caption("Nothing matches these filters.")
     elif view == "list":

@@ -228,3 +228,26 @@ def test_streamed_text_is_stored_unescaped(app, monkeypatch):
     click(app, "Analyze")
     briefing = app.session_state["ws"]["documents"][0]["briefing"]
     assert briefing == "Budget is $220K."  # stored as written, escaped only when displayed
+
+
+@pytest.mark.skipif(not DEMO_FILE.exists(), reason="run `python -m scripts.build_demo` first")
+def test_stat_cards_open_filtered_views(app):
+    click(app, "Show me Grace's week")
+    ws = app.session_state["ws"]
+
+    click(app, "Owed to me")
+    assert app.session_state["nav"] == "loops" and app.session_state["f_who"] == "owed"
+
+    click(app, "Overdue")
+    assert app.session_state["f_overdue"] is True
+    assert any("overdue only (1)" in b.label for b in app.button)  # Grace's one overdue item
+    assert any("taco place" in m.value for m in app.markdown)
+
+    click(app, "show all")
+    assert app.session_state["f_overdue"] is False
+
+    click(app, "Changes to review")
+    assert app.session_state["nav"] == "changes"
+    click(app, "Documents")
+    assert app.session_state["nav"] == "docs"
+    assert not app.exception
