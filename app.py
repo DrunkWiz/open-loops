@@ -74,6 +74,30 @@ st.markdown(
 .st-key-metrics button:hover {border-color: #76B900; background: rgba(118,185,0,.07); color: inherit;}
 .st-key-metrics button:focus:not(:active) {border-color: #76B900; color: inherit;}
 .quote {border-left: 3px solid #76B900; padding: .2rem .7rem; margin: .3rem 0; font-style: italic; opacity: .9;}
+
+/* Phones: stat cards as a 3x2 grid instead of six stacked rows, and a more compact header. */
+@media (max-width: 640px) {
+  .block-container {padding-top: 1.5rem;}
+  .hero {padding: 1rem 1.1rem; margin-bottom: 1rem;}
+  .hero h1 {font-size: 1.6rem;}
+  .hero p {font-size: .92rem;}
+  .st-key-metrics [data-testid="stHorizontalBlock"] {flex-wrap: wrap; gap: .5rem;}
+  .st-key-metrics [data-testid="stColumn"] {flex: 1 1 calc(33.333% - .5rem) !important;
+      width: calc(33.333% - .5rem) !important; min-width: calc(33.333% - .5rem) !important;}
+  .st-key-metrics button {min-height: 3.9rem; padding: .55rem .65rem;}
+  .st-key-metrics button p {font-size: .7rem;}
+  .st-key-metrics button strong {font-size: 1.25rem;}
+  .stElementContainer:has(> [data-testid="stSpace"]) {flex: 0 0 .25rem !important; height: .25rem !important;
+      min-height: 0 !important; overflow: hidden;}
+  /* Commitment cards: keep the done-checkbox beside the task instead of on its own row. */
+  [class*="st-key-card_"] [data-testid="stHorizontalBlock"]:has([data-testid="stCheckbox"]) {
+      flex-wrap: nowrap; gap: .5rem;}
+  [class*="st-key-card_"] [data-testid="stHorizontalBlock"]:has([data-testid="stCheckbox"])
+      > [data-testid="stColumn"]:first-child {flex: 0 0 1.6rem !important; width: 1.6rem !important;
+      min-width: 1.6rem !important;}
+  [class*="st-key-card_"] [data-testid="stHorizontalBlock"]:has([data-testid="stCheckbox"])
+      > [data-testid="stColumn"]:last-child {flex: 1 1 0 !important; width: auto !important; min-width: 0 !important;}
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -344,6 +368,22 @@ def toggle_done(cid: str, key: str) -> None:
     persist_now()
 
 
+def save_edit(cid: str, key: str) -> None:
+    new_due = ss.get(f"{key}_due")
+    changed = wsx.edit_commitment(ss.ws, cid, {
+        "task": ss.get(f"{key}_task", ""),
+        "owner": ss.get(f"{key}_owner", ""),
+        "requester": ss.get(f"{key}_requester", ""),
+        "due_date": new_due.isoformat() if new_due else None,
+        "priority": ss.get(f"{key}_priority"),
+    })
+    persist_now()
+    if changed:
+        st.toast("Saved: " + ", ".join(f.replace("_", " ") for f in changed) + ". See the item's history.", icon="✏️")
+    else:
+        st.toast("Nothing changed.", icon="ℹ️")
+
+
 def resolve(pid: str, accept: bool) -> None:
     wsx.resolve_proposal(ss.ws, pid, accept)
     persist_now()
@@ -554,9 +594,9 @@ def usage_caption(label: str | None) -> None:
 
 def commitment_card(c: dict, prefix: str, show_direction: bool = True) -> None:
     status = c["status"]
-    with st.container(border=True):
+    key = f"{prefix}_{c['id']}_{status}"
+    with st.container(border=True, key=f"card_{key}"):
         left, right = st.columns([0.05, 0.95], vertical_alignment="top")
-        key = f"{prefix}_{c['id']}_{status}"
         left.checkbox("Done", value=status == "done", key=key, label_visibility="collapsed",
                       on_change=toggle_done, args=(c["id"], key), disabled=status == "cancelled")
         with right:
@@ -596,6 +636,24 @@ def commitment_card(c: dict, prefix: str, show_direction: bool = True) -> None:
                             new = fmt_date(h["new"]) if h["field"] == "due_date" else h["new"]
                             st.caption(f"{fmt_date(h['doc_date'])} · {h['field'].replace('_', ' ')}: "
                                        f"{md(str(old))} → {md(str(new))} ({md(h['doc_title'])})")
+                if status != "cancelled":
+                    edit_form(c, f"{prefix}_{c['id']}")
+
+
+def edit_form(c: dict, key: str) -> None:
+    """✏️ Edit popover: correct what the AI extracted. Changes are kept in the item's history."""
+    with st.popover("✏️ Edit"):
+        with st.form(f"edit_{key}", border=False):
+            st.text_input("Task", value=c["task"], key=f"{key}_task")
+            st.text_input("Owner", value=c["owner"], key=f"{key}_owner",
+                          help="Use your own name (from the sidebar) for things you owe.")
+            st.text_input("For (optional)", value=c.get("requester") or "", key=f"{key}_requester",
+                          help="Who it's for, or who asked for it.")
+            st.date_input("Due date", value=due(c), key=f"{key}_due", format="YYYY-MM-DD",
+                          help="Clear the field for no date.")
+            st.selectbox("Priority", ["High", "Medium", "Low"], index=["High", "Medium", "Low"].index(
+                c["priority"]) if c["priority"] in ("High", "Medium", "Low") else 1, key=f"{key}_priority")
+            st.form_submit_button("Save", type="primary", on_click=save_edit, args=(c["id"], key))
 
 
 # --------------------------------------------------------------------------- #

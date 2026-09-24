@@ -251,3 +251,20 @@ def test_stat_cards_open_filtered_views(app):
     click(app, "Documents")
     assert app.session_state["nav"] == "docs"
     assert not app.exception
+
+
+@pytest.mark.skipif(not DEMO_FILE.exists(), reason="run `python -m scripts.build_demo` first")
+def test_edit_commitment_from_card(app):
+    import datetime as _dt
+
+    click(app, "Show me Grace's week")
+    click(app, "Overdue")  # one card: the taco-place call
+    key = next(t.key for t in app.text_input if t.key and t.key.endswith("_owner"))
+    prefix = key[: -len("_owner")]
+    app.text_input(key=f"{prefix}_owner").set_value("Jake")
+    app.date_input(key=f"{prefix}_due").set_value(_dt.date(2026, 9, 30))
+    next(b for b in app.button if b.label == "Save").click().run()
+    assert not app.exception
+    c = next(c for c in app.session_state["ws"]["commitments"] if "taco" in c["task"].lower())
+    assert c["owner"] == "Jake" and c["due_date"] == "2026-09-30"
+    assert {h["field"] for h in c["history"]} == {"owner", "due_date"}

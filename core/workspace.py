@@ -183,6 +183,34 @@ def undo_proposal(ws: dict, proposal_id: str) -> bool:
     return True
 
 
+EDITABLE_FIELDS = ("task", "owner", "requester", "due_date", "priority")
+
+
+def edit_commitment(ws: dict, cid: str, updates: dict) -> list[str]:
+    """Apply the user's corrections, recording each in the history. Returns the fields changed."""
+    commitment = get_commitment(ws, cid)
+    if not commitment:
+        return []
+    changed = []
+    for key in EDITABLE_FIELDS:
+        if key not in updates:
+            continue
+        new = updates[key]
+        new = new.strip() or None if isinstance(new, str) else new
+        if key in ("task", "owner") and not new:
+            continue  # these can't be blank
+        if new == commitment.get(key):
+            continue
+        commitment["history"].append({"at": now(), "doc_id": None, "doc_title": "You (edit)",
+                                      "doc_date": date.today().isoformat(),
+                                      "field": key, "old": commitment.get(key), "new": new})
+        commitment[key] = new
+        if key == "due_date":
+            commitment["due_text"] = None  # the original wording no longer describes the date
+        changed.append(key)
+    return changed
+
+
 def set_status(ws: dict, cid: str, status: str) -> None:
     commitment = get_commitment(ws, cid)
     if commitment and commitment["status"] != status:

@@ -1,6 +1,5 @@
 <div align="center">
 
-<!-- Replace with your banner: ![Open Loops](assets/banner.png) -->
 # 🔁 Open Loops
 ### Your AI chief of staff for every promise you make, and every promise made to you
 
@@ -11,6 +10,8 @@
 ![Nebius](https://img.shields.io/badge/Inference-Nebius%20Token%20Factory-2E2EFF)
 ![NVIDIA Nemotron](https://img.shields.io/badge/Model-NVIDIA%20Nemotron-76B900)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+<img src="assets/demo.gif" alt="Open Loops demo: load Grace's week, review a plan change, accept it, open the overdue list and the Today view" width="860">
 
 </div>
 
@@ -31,6 +32,7 @@ Feed it the text you already have: emails, meeting notes, auto-generated transcr
 | 📌 | **I owe / Owed to me / Others** | Tell it who you are once, and every item is sorted by who owes what to whom. |
 | 🔁 | **Cross-document change detection** | When a newer document moves a deadline, reassigns work or cancels something, you get a **proposal** with the reason, to accept or ignore, and you can undo either. Nothing is edited silently. |
 | ✅ | **Verified sources** | Every commitment keeps the exact sentence it came from. The app checks that quote against the original, word for word, and flags any that don't match. |
+| ✏️ | **You stay in charge** | If the AI gets an owner or date wrong, fix it with ✏️ Edit. Every correction is kept in the item's history. |
 | 📅 | **Real dates** | "By Friday", "next Tuesday" and "tomorrow" become real dates based on when each document was written. Anything vague stays marked as undated, never guessed. |
 | ☀️ | **Morning brief** | What's overdue, due today and due this week, and who you're waiting on, in one screen. |
 | ✉️ | **Act on it** | Draft follow-up messages per person, export dated items to your calendar (`.ics`), or download a checklist. |
@@ -66,6 +68,7 @@ Open **🔁 Changes** and the app flags the plan changes: *Hamid's deadline move
 - **Speed:** extraction runs in the background while the briefing streams in. Every answer shows its latency and token count.
 - **Long documents** are split into chunks and nothing is dropped. Briefings of long documents summarise each part first, then combine the notes.
 - **Models:** the sidebar lists the chat models Nebius serves right now, with **NVIDIA Nemotron 3 Super** first. Reasoning traces are removed before display.
+- **Works on phones:** the layout adapts to narrow screens (a 3×2 grid of stat cards, compact cards).
 
 ## 📏 Evaluation
 
@@ -79,7 +82,7 @@ python -m evals.run_evals
 
 `python -m scripts.live_check` checks the writing features against the live model: the morning brief, a follow-up draft (it must use the latest plan, not a cancelled task or an old date) and Ask across documents. Latest run: 5/5.
 
-The core logic has 34 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
+The core logic has 36 offline tests (`pytest`), including UI tests that click through the real Streamlit app with a stand-in for the model.
 
 ## 🔒 Privacy
 
@@ -136,6 +139,8 @@ core/
 samples/             10 messy real-world documents, demo story (catalog.json),
                      saved demo results (demo_workspace.json)
 scripts/             build_demo.py (regenerate saved demo) · live_check.py (live feature check)
+                     make_demo_gif.py (records assets/demo.gif; needs `pip install playwright`)
+assets/              demo.gif
 evals/               scored evaluation against hand-written expectations
 tests/               offline unit + UI tests (fake model)
 ```

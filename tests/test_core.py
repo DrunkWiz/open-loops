@@ -219,3 +219,17 @@ def test_undo_blocked_after_later_edits():
     assert not wsx.can_undo(ws, update)
     assert not wsx.undo_proposal(ws, update["id"])
     assert wsx.get_commitment(ws, first["added"][0])["status"] == "done"
+
+
+def test_edit_commitment_records_history():
+    ws, first, _ = build_story()
+    cid = first["added"][0]
+    changed = wsx.edit_commitment(ws, cid, {"owner": "Priyanka", "due_date": "2026-10-05", "task": "  ",
+                                            "requester": "", "priority": "High"})
+    c = wsx.get_commitment(ws, cid)
+    assert set(changed) == {"owner", "due_date", "requester"}  # blank task ignored; priority unchanged
+    assert c["owner"] == "Priyanka" and c["due_date"] == "2026-10-05" and c["requester"] is None
+    assert c["due_text"] is None
+    assert [h["field"] for h in c["history"]] == ["owner", "requester", "due_date"]
+    assert c["history"][0]["old"] == "Hamid" and c["history"][0]["doc_title"] == "You (edit)"
+    assert wsx.edit_commitment(ws, cid, {"owner": "Priyanka"}) == []  # no-op edit

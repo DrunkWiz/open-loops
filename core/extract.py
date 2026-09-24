@@ -108,6 +108,8 @@ or moved out of scope.
 - Also list every task, feature or deliverable the document says was cut, dropped, cancelled, postponed \
 to a later release or moved out of scope, with status "cancelled" and its owner if known. These matter: \
 they tell the user which earlier commitments no longer apply.
+- Likewise list every task the document says was already done, sent or completed, with status "done", \
+so the user's list can be updated.
 - If the document says a deadline or plan changed, use the latest version and describe the old one in \
 change_note (e.g. "was Oct 9"); otherwise change_note is null.
 - source_quote: copy the shortest exact span (max 30 words) from the document that supports the item, \
