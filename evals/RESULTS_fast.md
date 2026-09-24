@@ -1,9 +1,9 @@
 # Evaluation results
 
-- **Model:** `nvidia/nemotron-3-super-120b-a12b` on Nebius Token Factory (reasoning on)
-- **Run:** 2026-09-24, 4.1 min per run
-- **Score:** **32.7/34 checks passed on average (96%)** over 3 runs (range 32–33; runs: 32, 33, 33)
-- **Source grounding:** 122/125 (98%) extracted items had a quote found verbatim in the document
+- **Model:** `nvidia/nemotron-3-super-120b-a12b` on Nebius Token Factory (fast mode)
+- **Run:** 2026-09-24, 0.7 min per run
+- **Score:** **29.3/34 checks passed on average (86%)** over 3 runs (range 27–31; runs: 30, 31, 27)
+- **Source grounding:** 103/110 (94%) extracted items had a quote found verbatim in the document
 
 Checks are hand-written expectations for the files in `samples/` (see `evals/cases.json`). The details below are from the last run.
 
@@ -17,18 +17,18 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ Grace: customer success due 2026-09-25 — *'by Friday' resolved from a Tuesday*
 - ✅ no open item about offline sync — *offline sync was cut from v3 (telling customers about it is fine)*
 
-**family_group_chat.txt** (10 items)
+**family_group_chat.txt** (7 items)
 
 - ✅ Dad: cake due 2026-10-10
-- ✅ Dad: linda due 2026-10-23
-- ✅ Jake: slideshow
+- ❌ Dad: linda due 2026-10-23 (got 2026-09-25)
+- ❌ Jake: slideshow (not found)
 - ✅ Grace: taco due 2026-09-22 — *'tomorrow' from Monday*
 - ✅ Mom: guest list
 
-**founder_voice_memo.txt** (7 items)
+**founder_voice_memo.txt** (6 items)
 
 - ✅ Omar: security due 2026-10-10
-- ✅ Wei: sso
+- ❌ Wei: sso (not found)
 - ✅ Alex: lisa due 2026-09-23 — *first-person memo = the user*
 - ✅ Alex: crm
 
@@ -38,12 +38,12 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ Kevin: alert
 - ✅ Sofia: postmortem
 
-**lecture_notes_messy.md** (5 items)
+**lecture_notes_messy.md** (3 items)
 
 - ✅ someone: ps4 due 2026-10-08
 - ✅ someone: topic due 2026-10-05
 
-**acme_followup_email.txt** (6 items)
+**acme_followup_email.txt** (3 items)
 
 - ✅ Priyanka: questionnaire due 2026-10-07 — *reassigned from Omar, deadline moved up*
 - ✅ Lisa: order form due 2026-09-30
@@ -58,16 +58,16 @@ Checks are hand-written expectations for the files in `samples/` (see `evals/cas
 - ✅ cancelled: watch — *Apple Watch moved to v3.1*
 - ✅ update: screenshot — *Tomás moved Oct 13 → Oct 15*
 
-**founder_voice_memo.txt → acme_followup_email.txt** (2 proposals)
+**founder_voice_memo.txt → acme_followup_email.txt** (0 proposals)
 
-- ✅ update: questionnaire — *questionnaire moved Oct 10 → Oct 7*
-- ✅ update: questionnaire — *questionnaire reassigned Omar → Priyanka*
+- ❌ update: questionnaire — *questionnaire moved Oct 10 → Oct 7*
+- ❌ update: questionnaire — *questionnaire reassigned Omar → Priyanka*
 - ❌ cancelled: sso — *Wei's SSO scoping cancelled*
-- ✅ update: case study — *case study and thank-you note sent*
+- ❌ update: case study — *case study and thank-you note sent*
 
 ## Grounded Q&A
 
-- ✅ *When is the midterm?* → The midterm has been moved to **October 14**. (From lecture_notes_messy.md – “prof said MIDTERM moved: now Oct 14 not Oct 12”).
-- ✅ *Is offline sync in v3?* → No—offline sync has been removed from v3 and will be included in v3.1 instead (“Offline sync is ALSO cut from v3…It’ll go in v3.1 too.” – conflicting_updates_em
-- ✅ *Which logo did Hannah approve?* → Hannah hadn’t approved any logo yet—she was leaning toward option C but had not given final approval. (From the auto‑generated call transcript.)
-- ✅ *What was the root cause?* → The root cause was the new promo‑banner feature writing a cache key for every user session without setting a TTL, which filled Redis node 3 to ~98% memory, spik
+- ✅ *When is the midterm?* → Oct 14
+- ✅ *Is offline sync in v3?* → No, offline sync is cut from v3 and will move to v3.1. This is stated in Grace Liu's email dated September 22, 2026, which says: "Offline sync is ALSO cut from 
+- ✅ *Which logo did Hannah approve?* → Hannah hasn't approved any logo yet; she was leaning toward option C according to Speaker 1 (the auto-transcript).
+- ✅ *What was the root cause?* → The primary root cause was Redis memory exhaustion due to missing TTLs on cache keys written by the new promo-banner feature, which caused high latency and cont

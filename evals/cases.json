@@ -342,12 +342,15 @@
       "date": "2026-09-22",
       "question": "Is offline sync in v3?",
       "expect_any": [
-        "no",
         "cut",
-        "not"
+        "v3.1",
+        "removed",
+        "not part",
+        "not in"
       ],
       "reject_any": [
-        "definitely in"
+        "yes,",
+        "yes."
       ]
     },
     {

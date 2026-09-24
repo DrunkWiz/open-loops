@@ -75,10 +75,18 @@ Open **🔁 Changes** and the app flags the plan changes: *Hamid's deadline move
 `evals/run_evals.py` runs the real pipeline on the sample documents and scores it against hand-written expectations in `evals/cases.json`, for example *"Hamid's onboarding is due Oct 6, not the old Oct 9"*, *"'by Friday' from a Tuesday is Sep 25"*, *"offline sync must not stay open"*, and *"don't claim Hannah approved a logo"*. It also reports **source grounding**: the share of extracted items whose quote appears word for word in the document.
 
 ```bash
-python -m evals.run_evals
+python -m evals.run_evals --runs 3          # reasoning on
+python -m evals.run_evals --runs 3 --fast   # Fast mode (reasoning off)
 ```
 
-**Latest run, NVIDIA Nemotron 3 Super on Nebius (reasoning on): 34/34 checks passed, and 46/46 source quotes found word for word in the original documents.** The checks include a second chain of documents the prompts were never tuned on: a founder's voice memo followed by an email thread that moves a deadline earlier, reassigns a task, cancels one and marks one done. The full report is in [`evals/RESULTS.md`](evals/RESULTS.md). Model outputs vary between runs, so rerun the evals after changing prompts.
+**NVIDIA Nemotron 3 Super on Nebius, 3 runs per mode (Sep 24, 2026):**
+
+| Mode | Checks passed (avg) | Range | Quotes found word for word | Time per run |
+|---|---|---|---|---|
+| Reasoning on (default) | **32.7 / 34 (96%)** | 32–33 | 122/125 (98%) | ~4 min |
+| Fast mode | 29.3 / 34 (86%) | 27–31 | 103/110 (94%) | ~0.7 min |
+
+Reasoning is worth the wait where documents have to be compared: in Fast mode the model missed a reassigned task, a deadline moved earlier and a task marked done in the voice memo → email chain, and misread "Friday the 23rd" in the family chat. The one check reasoning mode still misses is ambiguous in the text itself ("maybe Wei can scope it" is later dropped). That voice memo → email chain is a second set of documents the prompts were never tuned on. Full reports: [`evals/RESULTS.md`](evals/RESULTS.md) and [`evals/RESULTS_fast.md`](evals/RESULTS_fast.md). Model outputs vary between runs, which is why we report averages.
 
 `python -m scripts.live_check` checks the writing features against the live model: the morning brief, a follow-up draft (it must use the latest plan, not a cancelled task or an old date) and Ask across documents. Latest run: 5/5.
 

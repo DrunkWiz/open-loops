@@ -1,7 +1,9 @@
 """Score Open Loops against hand-labelled expectations on the sample documents.
 
 Usage (needs NEBIUS_API_KEY in .env or the environment):
-    python -m evals.run_evals                      # default model
+    python -m evals.run_evals                      # default model, reasoning on
+    python -m evals.run_evals --runs 3             # repeat and report the average and range
+    python -m evals.run_evals --fast               # Fast mode (skips the model's reasoning step)
     python -m evals.run_evals --model MiniMaxAI/MiniMax-M3
 
 Writes a Markdown report to evals/RESULTS.md.
@@ -63,7 +65,7 @@ def check_extraction(items: list[dict], check: dict) -> tuple[bool, str]:
     return True, label
 
 
-def run(model: str, api_key: str, thinking: bool = True) -> str:
+def run(model: str, api_key: str, thinking: bool = True) -> dict:
     llm = LLM(api_key, model, temperature=0.1, thinking=thinking)
     lines, passed, total, quotes, verified = [], 0, 0, 0, 0
     started = time.perf_counter()
@@ -118,16 +120,31 @@ def run(model: str, api_key: str, thinking: bool = True) -> str:
     lines.append("")
 
     minutes = (time.perf_counter() - started) / 60
-    grounding = f"{verified}/{quotes} ({verified / quotes:.0%})" if quotes else "n/a"
+    return {"passed": passed, "total": total, "minutes": minutes, "verified": verified, "quotes": quotes,
+            "lines": lines}
+
+
+def render(model: str, thinking: bool, runs: list[dict]) -> str:
+    """Report: every run's score (models vary between runs), then the last run's details."""
+    scores = [r["passed"] for r in runs]
+    total = runs[-1]["total"]
+    verified, quotes = sum(r["verified"] for r in runs), sum(r["quotes"] for r in runs)
+    mean = sum(scores) / len(scores)
+    minutes = sum(r["minutes"] for r in runs) / len(runs)
+    score = (f"**{scores[0]}/{total} checks passed ({scores[0] / total:.0%})**" if len(runs) == 1 else
+             f"**{mean:.1f}/{total} checks passed on average ({mean / total:.0%})** over {len(runs)} runs "
+             f"(range {min(scores)}–{max(scores)}; runs: {', '.join(map(str, scores))})")
     header = [
         "# Evaluation results\n",
         f"- **Model:** `{model}` on Nebius Token Factory ({'reasoning on' if thinking else 'fast mode'})",
-        f"- **Run:** {date.today().isoformat()}, {minutes:.1f} min",
-        f"- **Score:** **{passed}/{total} checks passed ({passed / total:.0%})**",
-        f"- **Source grounding:** {grounding} extracted items had a quote found verbatim in the document\n",
-        "Checks are hand-written expectations for the files in `samples/` (see `evals/cases.json`).\n",
+        f"- **Run:** {date.today().isoformat()}, {minutes:.1f} min per run",
+        f"- **Score:** {score}",
+        f"- **Source grounding:** {verified}/{quotes} ({verified / max(quotes, 1):.0%}) extracted items had a quote "
+        "found verbatim in the document\n",
+        "Checks are hand-written expectations for the files in `samples/` (see `evals/cases.json`)."
+        + (" The details below are from the last run.\n" if len(runs) > 1 else "\n"),
     ]
-    return "\n".join(header + lines)
+    return "\n".join(header + runs[-1]["lines"])
 
 
 def main() -> None:
@@ -135,11 +152,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--model", default=FALLBACK_MODELS[0])
     parser.add_argument("--fast", action="store_true", help="skip the model's reasoning step")
+    parser.add_argument("--runs", type=int, default=1, help="repeat the whole set; model output varies between runs")
     args = parser.parse_args()
     key = os.getenv("NEBIUS_API_KEY", "")
     if not key or key.startswith("your_"):
         sys.exit("Set NEBIUS_API_KEY in .env first.")
-    report = run(args.model, key, thinking=not args.fast)
+    runs = []
+    for i in range(args.runs):
+        runs.append(run(args.model, key, thinking=not args.fast))
+        print(f"run {i + 1}/{args.runs}: {runs[-1]['passed']}/{runs[-1]['total']}", flush=True)
+    report = render(args.model, not args.fast, runs)
     out = Path(__file__).parent / ("RESULTS_fast.md" if args.fast else "RESULTS.md")
     out.write_text(report, encoding="utf-8")
     print(report.split("## ")[0])
